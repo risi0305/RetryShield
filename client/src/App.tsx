@@ -1,14 +1,17 @@
-import { Header } from './components/Header'
+import { Route, Routes } from 'react-router-dom'
 import { TransactionProvider } from './context/TransactionContext'
+import { NetworkFailureInjection } from './pages/NetworkFailureInjection'
 import { PaymentFlowSimulator } from './pages/PaymentFlowSimulator'
+import { RetryScenario } from './pages/RetryScenario'
 
 function App() {
   return (
     <TransactionProvider>
-      <div className="min-h-screen bg-slate-950">
-        <Header />
-        <PaymentFlowSimulator />
-      </div>
+      <Routes>
+        <Route path="/" element={<PaymentFlowSimulator />} />
+        <Route path="/failure-injection" element={<NetworkFailureInjection />} />
+        <Route path="/retry" element={<RetryScenario />} />
+      </Routes>
     </TransactionProvider>
   )
 }

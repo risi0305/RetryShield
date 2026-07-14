@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react'
+
 function ShieldIcon() {
   return (
     <svg
@@ -15,12 +17,15 @@ function ShieldIcon() {
   )
 }
 
-export function Header() {
+export function Header({ right }: { right?: ReactNode }) {
   return (
     <header className="border-b border-slate-800 bg-slate-900/80 backdrop-blur">
-      <div className="mx-auto flex max-w-5xl items-center gap-2 px-6 py-4">
-        <ShieldIcon />
-        <span className="text-lg font-semibold tracking-tight text-slate-100">RetryShield</span>
+      <div className="mx-auto flex max-w-5xl items-center justify-between gap-2 px-6 py-4">
+        <div className="flex items-center gap-2">
+          <ShieldIcon />
+          <span className="text-lg font-semibold tracking-tight text-slate-100">RetryShield</span>
+        </div>
+        {right && <div className="flex items-center gap-3">{right}</div>}
       </div>
     </header>
   )

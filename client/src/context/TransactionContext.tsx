@@ -2,16 +2,29 @@ import { createContext, useContext, useState, type ReactNode } from 'react'
 
 export type PaymentMethod = 'UPI' | 'Card'
 
+export type FailureType =
+  | 'Network Lost After Request Sent'
+  | 'Timeout Before Response'
+  | 'Partial Response Received'
+
+export type FailurePoint =
+  | 'Between Customer and Merchant'
+  | 'Between PSP and Bank'
+  | 'Between Bank and PSP (response)'
+
 export interface TransactionSummary {
   idempotencyKey: string
   amount: number
   paymentMethod: PaymentMethod
   status: string
+  failureType?: FailureType | null
+  failurePoint?: FailurePoint | null
 }
 
 interface TransactionContextValue {
   transaction: TransactionSummary | null
   setTransaction: (transaction: TransactionSummary) => void
+  clearTransaction: () => void
 }
 
 const TransactionContext = createContext<TransactionContextValue | undefined>(undefined)
@@ -19,8 +32,10 @@ const TransactionContext = createContext<TransactionContextValue | undefined>(un
 export function TransactionProvider({ children }: { children: ReactNode }) {
   const [transaction, setTransaction] = useState<TransactionSummary | null>(null)
 
+  const clearTransaction = () => setTransaction(null)
+
   return (
-    <TransactionContext.Provider value={{ transaction, setTransaction }}>
+    <TransactionContext.Provider value={{ transaction, setTransaction, clearTransaction }}>
       {children}
     </TransactionContext.Provider>
   )

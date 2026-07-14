@@ -1,5 +1,7 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { FlowDiagram, FLOW_STEPS } from '../components/FlowDiagram'
+import { Header } from '../components/Header'
 import { TransactionForm } from '../components/TransactionForm'
 import { useTransaction, type PaymentMethod } from '../context/TransactionContext'
 
@@ -8,6 +10,7 @@ const STEP_DELAY_MS = 450
 
 export function PaymentFlowSimulator() {
   const { transaction, setTransaction } = useTransaction()
+  const navigate = useNavigate()
   const [amount, setAmount] = useState('')
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('UPI')
   const [activeStep, setActiveStep] = useState(-1)
@@ -57,52 +60,62 @@ export function PaymentFlowSimulator() {
   }
 
   return (
-    <main className="mx-auto max-w-5xl px-6 py-10">
-      <h1 className="text-2xl font-semibold text-slate-100">Payment Flow Simulator</h1>
-      <p className="mt-1 text-sm text-slate-400">
-        Walk a payment through the full rail — customer, merchant, PSP, network, and issuing bank.
-      </p>
-
-      <section className="mt-8 rounded-2xl border border-slate-800 bg-slate-900/60 p-6 shadow-lg shadow-black/20">
-        <FlowDiagram activeStep={activeStep} />
-      </section>
-
-      <section className="mt-6">
-        <TransactionForm
-          amount={amount}
-          onAmountChange={setAmount}
-          paymentMethod={paymentMethod}
-          onPaymentMethodChange={setPaymentMethod}
-          onSubmit={handleStartPayment}
-          isSubmitting={isSubmitting}
-        />
-      </section>
-
-      {error && (
-        <p className="mt-4 rounded-lg border border-red-900 bg-red-950/50 px-4 py-3 text-sm text-red-300">
-          {error}
+    <div className="min-h-screen bg-slate-950">
+      <Header />
+      <main className="mx-auto max-w-5xl px-6 py-10">
+        <h1 className="text-2xl font-semibold text-slate-100">Payment Flow Simulator</h1>
+        <p className="mt-1 text-sm text-slate-400">
+          Walk a payment through the full rail — customer, merchant, PSP, network, and issuing bank.
         </p>
-      )}
 
-      {transaction && !isSubmitting && (
-        <section className="mt-6 rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-lg shadow-black/20">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-400">
-            Last Transaction
-          </h2>
-          <dl className="mt-3 grid grid-cols-2 gap-y-2 text-sm sm:grid-cols-4">
-            <dt className="text-slate-500">Idempotency Key</dt>
-            <dd className="col-span-1 truncate font-mono text-slate-200 sm:col-span-3">
-              {transaction.idempotencyKey}
-            </dd>
-            <dt className="text-slate-500">Amount</dt>
-            <dd className="text-slate-200">₹{transaction.amount}</dd>
-            <dt className="text-slate-500">Method</dt>
-            <dd className="text-slate-200">{transaction.paymentMethod}</dd>
-            <dt className="text-slate-500">Status</dt>
-            <dd className="text-slate-200">{transaction.status}</dd>
-          </dl>
+        <section className="mt-8 rounded-2xl border border-slate-800 bg-slate-900/60 p-6 shadow-lg shadow-black/20">
+          <FlowDiagram activeStep={activeStep} />
         </section>
-      )}
-    </main>
+
+        <section className="mt-6">
+          <TransactionForm
+            amount={amount}
+            onAmountChange={setAmount}
+            paymentMethod={paymentMethod}
+            onPaymentMethodChange={setPaymentMethod}
+            onSubmit={handleStartPayment}
+            isSubmitting={isSubmitting}
+          />
+        </section>
+
+        {error && (
+          <p className="mt-4 rounded-lg border border-red-900 bg-red-950/50 px-4 py-3 text-sm text-red-300">
+            {error}
+          </p>
+        )}
+
+        {transaction && !isSubmitting && (
+          <section className="mt-6 rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-lg shadow-black/20">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-400">
+              Last Transaction
+            </h2>
+            <dl className="mt-3 grid grid-cols-2 gap-y-2 text-sm sm:grid-cols-4">
+              <dt className="text-slate-500">Idempotency Key</dt>
+              <dd className="col-span-1 truncate font-mono text-slate-200 sm:col-span-3">
+                {transaction.idempotencyKey}
+              </dd>
+              <dt className="text-slate-500">Amount</dt>
+              <dd className="text-slate-200">₹{transaction.amount}</dd>
+              <dt className="text-slate-500">Method</dt>
+              <dd className="text-slate-200">{transaction.paymentMethod}</dd>
+              <dt className="text-slate-500">Status</dt>
+              <dd className="text-slate-200">{transaction.status}</dd>
+            </dl>
+            <button
+              type="button"
+              onClick={() => navigate('/failure-injection')}
+              className="mt-4 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-md shadow-blue-900/30 transition-colors hover:bg-blue-500"
+            >
+              Continue to Failure Injection
+            </button>
+          </section>
+        )}
+      </main>
+    </div>
   )
 }
