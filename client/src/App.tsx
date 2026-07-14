@@ -1,11 +1,15 @@
+import { Header } from './components/Header'
+import { TransactionProvider } from './context/TransactionContext'
+import { PaymentFlowSimulator } from './pages/PaymentFlowSimulator'
+
 function App() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-900 text-slate-100">
-      <div className="text-center">
-        <h1 className="text-3xl font-semibold">RetryShield</h1>
-        <p className="mt-2 text-slate-400">Payment incident replay simulator — scaffold running.</p>
+    <TransactionProvider>
+      <div className="min-h-screen bg-slate-950">
+        <Header />
+        <PaymentFlowSimulator />
       </div>
-    </div>
+    </TransactionProvider>
   )
 }
 
