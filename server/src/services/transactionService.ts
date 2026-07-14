@@ -4,6 +4,16 @@ import { db } from './firebase.js'
 export type TransactionStatus = 'pending' | 'success' | 'failed' | 'duplicate_ignored'
 export type PaymentMethod = 'UPI' | 'Card'
 
+export type FailureType =
+  | 'Network Lost After Request Sent'
+  | 'Timeout Before Response'
+  | 'Partial Response Received'
+
+export type FailurePoint =
+  | 'Between Customer and Merchant'
+  | 'Between PSP and Bank'
+  | 'Between Bank and PSP (response)'
+
 export interface TransactionEvent {
   step: string
   timestamp: Timestamp
@@ -15,8 +25,8 @@ export interface TransactionDocument {
   amount: number
   paymentMethod: PaymentMethod
   status: TransactionStatus
-  failureType: string | null
-  failurePoint: string | null
+  failureType: FailureType | null
+  failurePoint: FailurePoint | null
   createdAt: Timestamp
   events: TransactionEvent[]
 }
@@ -26,8 +36,8 @@ export interface NewTransactionInput {
   amount: number
   paymentMethod: PaymentMethod
   status?: TransactionStatus
-  failureType?: string | null
-  failurePoint?: string | null
+  failureType?: FailureType | null
+  failurePoint?: FailurePoint | null
 }
 
 const COLLECTION = 'transactions'
@@ -80,6 +90,20 @@ export async function appendEvent(
     .collection(COLLECTION)
     .doc(idempotencyKey)
     .update({ events: FieldValue.arrayUnion(entry) })
+}
+
+export async function setFailureConfig(
+  idempotencyKey: string,
+  config: { failureType: FailureType | null; failurePoint: FailurePoint | null },
+): Promise<void> {
+  await requireDb()
+    .collection(COLLECTION)
+    .doc(idempotencyKey)
+    .update({ failureType: config.failureType, failurePoint: config.failurePoint })
+}
+
+export async function setTransactionStatus(idempotencyKey: string, status: TransactionStatus): Promise<void> {
+  await requireDb().collection(COLLECTION).doc(idempotencyKey).update({ status })
 }
 
 export async function getAllTransactions(): Promise<TransactionDocument[]> {

@@ -28,8 +28,13 @@ payRouter.post('/', async (req, res) => {
     return res.status(201).json({ transaction })
   } catch (err) {
     if (isAlreadyExists(err)) {
-      const existing = await getTransactionByKey(idempotencyKey)
-      return res.status(409).json({ error: 'duplicate idempotency key', transaction: existing })
+      try {
+        const existing = await getTransactionByKey(idempotencyKey)
+        return res.status(409).json({ error: 'duplicate idempotency key', transaction: existing })
+      } catch (lookupErr) {
+        console.error('[pay] failed to look up duplicate transaction', lookupErr)
+        return res.status(500).json({ error: 'failed to create transaction' })
+      }
     }
     console.error('[pay] failed to create transaction', err)
     return res.status(500).json({ error: 'failed to create transaction' })
