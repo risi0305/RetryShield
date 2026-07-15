@@ -52,6 +52,17 @@ function requireDb() {
 }
 
 export async function createTransaction(data: NewTransactionInput): Promise<TransactionDocument> {
+  const createdAt = Timestamp.now()
+
+  // The simulator processes these steps synchronously, so they're logged as
+  // real events right away rather than left for the frontend to fabricate.
+  const initialEvents: TransactionEvent[] = [
+    { step: 'payment_initiated', detail: `Customer initiates payment of ₹${data.amount}`, timestamp: Timestamp.now() },
+    { step: 'request_sent_to_psp', detail: 'Request sent to PSP', timestamp: Timestamp.now() },
+    { step: 'request_forwarded_to_bank', detail: 'Request forwarded to Bank', timestamp: Timestamp.now() },
+    { step: 'bank_approved', detail: 'Bank approves the transaction', timestamp: Timestamp.now() },
+  ]
+
   const doc: TransactionDocument = {
     idempotencyKey: data.idempotencyKey,
     amount: data.amount,
@@ -59,8 +70,8 @@ export async function createTransaction(data: NewTransactionInput): Promise<Tran
     status: data.status ?? 'pending',
     failureType: data.failureType ?? null,
     failurePoint: data.failurePoint ?? null,
-    createdAt: Timestamp.now(),
-    events: [],
+    createdAt,
+    events: initialEvents,
   }
 
   // .create() (not .set()) throws "already-exists" if the doc is already there —

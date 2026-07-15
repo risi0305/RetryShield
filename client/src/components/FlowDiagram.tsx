@@ -16,7 +16,7 @@ function ArrowIcon({ lit }: { lit: boolean }) {
       strokeLinecap="round"
       strokeLinejoin="round"
       className={`h-5 w-5 flex-shrink-0 transition-colors duration-300 ${
-        lit ? 'text-blue-400' : 'text-slate-700'
+        lit ? 'text-blue-700 dark:text-blue-400' : 'text-slate-300 dark:text-slate-700'
       }`}
     >
       <path d="M5 12h14" />
@@ -40,13 +40,13 @@ export function FlowDiagram({ activeStep }: FlowDiagramProps) {
             <div
               className={`flex min-w-[110px] flex-col items-center gap-2 rounded-xl border px-4 py-3 text-center text-xs font-medium transition-all duration-300 ${
                 isLit
-                  ? 'border-blue-500 bg-blue-500/10 text-blue-300 shadow-[0_0_0_3px_rgba(59,130,246,0.15)]'
-                  : 'border-slate-700 bg-slate-800/50 text-slate-400'
+                  ? 'border-blue-600 bg-blue-600/10 text-blue-700 shadow-[0_0_0_3px_rgba(37,99,235,0.12)] dark:text-blue-300'
+                  : 'border-slate-300 bg-slate-100 text-slate-500 dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-400'
               }`}
             >
               <span
                 className={`h-2.5 w-2.5 rounded-full transition-colors duration-300 ${
-                  isLit ? 'animate-pulse bg-blue-400' : 'bg-slate-600'
+                  isLit ? 'animate-pulse bg-blue-600' : 'bg-slate-400 dark:bg-slate-600'
                 }`}
               />
               {step}

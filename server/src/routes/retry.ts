@@ -16,9 +16,15 @@ retryRouter.post('/', async (req, res) => {
       return res.status(404).json({ error: 'no transaction found for idempotencyKey' })
     }
 
-    if (existing.status === 'success') {
-      // Idempotency check: a prior attempt already succeeded, so this retry is
-      // a duplicate — record it as such instead of charging again.
+    await appendEvent(idempotencyKey, {
+      step: 'retry_initiated',
+      detail: 'Customer/merchant retries payment',
+    })
+
+    if (existing.status === 'success' || existing.status === 'duplicate_ignored') {
+      // Idempotency check: a prior attempt already succeeded (or was already
+      // flagged as a duplicate), so this retry is a duplicate — record it as
+      // such instead of charging again.
       await appendEvent(idempotencyKey, {
         step: 'duplicate_detected',
         detail: 'Duplicate request detected by system',
@@ -27,7 +33,7 @@ retryRouter.post('/', async (req, res) => {
         step: 'retry_ignored',
         detail: 'Retry ignored — Original transaction returned',
       })
-      await setTransactionStatus(idempotencyKey, existing.status)
+      await setTransactionStatus(idempotencyKey, 'duplicate_ignored')
     } else {
       await appendEvent(idempotencyKey, {
         step: 'retry_processed',

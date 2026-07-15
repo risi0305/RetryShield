@@ -49,8 +49,8 @@ injectFailureRouter.post('/', async (req, res) => {
     if (simulateFailure) {
       await setFailureConfig(idempotencyKey, { failureType, failurePoint })
       await appendEvent(idempotencyKey, {
-        step: 'failure_injected',
-        detail: `${failureType} at ${failurePoint} (timeout ${delaySeconds}s)`,
+        step: 'network_failure',
+        detail: `Network failure – Response lost (${failureType}, ${failurePoint}, timeout ${delaySeconds}s)`,
       })
     } else {
       await setFailureConfig(idempotencyKey, { failureType: null, failurePoint: null })

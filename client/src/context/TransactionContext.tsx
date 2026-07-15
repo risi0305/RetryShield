@@ -21,21 +21,42 @@ export interface TransactionSummary {
   failurePoint?: FailurePoint | null
 }
 
+export interface AiReportSummary {
+  summary: string
+  keyFactors: string[]
+}
+
 interface TransactionContextValue {
   transaction: TransactionSummary | null
   setTransaction: (transaction: TransactionSummary) => void
   clearTransaction: () => void
+  aiReport: AiReportSummary | null
+  setAiReport: (report: AiReportSummary | null) => void
 }
 
 const TransactionContext = createContext<TransactionContextValue | undefined>(undefined)
 
 export function TransactionProvider({ children }: { children: ReactNode }) {
-  const [transaction, setTransaction] = useState<TransactionSummary | null>(null)
+  const [transaction, setTransactionState] = useState<TransactionSummary | null>(null)
+  const [aiReport, setAiReport] = useState<AiReportSummary | null>(null)
 
-  const clearTransaction = () => setTransaction(null)
+  function setTransaction(next: TransactionSummary) {
+    // Switching to a different transaction (e.g. via History) invalidates any
+    // AI report generated for the previous one — updates to the *same*
+    // transaction (failureType, status, ...) should leave it alone.
+    if (!transaction || transaction.idempotencyKey !== next.idempotencyKey) {
+      setAiReport(null)
+    }
+    setTransactionState(next)
+  }
+
+  function clearTransaction() {
+    setTransactionState(null)
+    setAiReport(null)
+  }
 
   return (
-    <TransactionContext.Provider value={{ transaction, setTransaction, clearTransaction }}>
+    <TransactionContext.Provider value={{ transaction, setTransaction, clearTransaction, aiReport, setAiReport }}>
       {children}
     </TransactionContext.Provider>
   )

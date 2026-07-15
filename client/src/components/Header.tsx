@@ -1,4 +1,6 @@
 import type { ReactNode } from 'react'
+import { Link } from 'react-router-dom'
+import { ThemeToggle } from './ThemeToggle'
 
 function ShieldIcon() {
   return (
@@ -9,7 +11,7 @@ function ShieldIcon() {
       strokeWidth={2}
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="h-6 w-6 text-blue-500"
+      className="h-6 w-6 text-blue-600"
     >
       <path d="M12 3l7 3v5c0 4.5-3 8.5-7 10-4-1.5-7-5.5-7-10V6l7-3z" />
       <path d="M9.5 12l1.8 1.8L14.5 10" />
@@ -19,11 +21,28 @@ function ShieldIcon() {
 
 export function Header({ right }: { right?: ReactNode }) {
   return (
-    <header className="border-b border-slate-800 bg-slate-900/80 backdrop-blur">
+    <header className="border-b border-slate-200 bg-white/80 backdrop-blur dark:border-slate-800 dark:bg-slate-900/80">
       <div className="mx-auto flex max-w-5xl items-center justify-between gap-2 px-6 py-4">
-        <div className="flex items-center gap-2">
-          <ShieldIcon />
-          <span className="text-lg font-semibold tracking-tight text-slate-100">RetryShield</span>
+        <div className="flex items-center gap-4">
+          <Link to="/" className="flex items-center gap-2">
+            <ShieldIcon />
+            <span className="text-lg font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+              RetryShield
+            </span>
+          </Link>
+          <ThemeToggle />
+          <Link
+            to="/history"
+            className="text-sm font-medium text-slate-500 transition-colors hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+          >
+            History
+          </Link>
+          <Link
+            to="/scenario-comparison"
+            className="text-sm font-medium text-slate-500 transition-colors hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+          >
+            Compare
+          </Link>
         </div>
         {right && <div className="flex items-center gap-3">{right}</div>}
       </div>
