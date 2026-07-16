@@ -1,6 +1,7 @@
 import 'dotenv/config'
 import cors from 'cors'
 import express from 'express'
+import { accessRouter } from './routes/access.js'
 import { analyzeRouter } from './routes/analyze.js'
 import { dashboardRouter } from './routes/dashboard.js'
 import { healthRouter } from './routes/health.js'
@@ -16,6 +17,7 @@ app.use(cors())
 app.use(express.json())
 
 app.use('/api/health', healthRouter)
+app.use('/api/access', accessRouter)
 app.use('/api/pay', payRouter)
 app.use('/api/inject-failure', injectFailureRouter)
 app.use('/api/retry', retryRouter)
