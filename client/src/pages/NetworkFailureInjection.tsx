@@ -8,7 +8,7 @@ import { useToast } from '../context/ToastContext'
 import { getFriendlyErrorMessage } from '../utils/friendlyError'
 import { toReferenceNumber } from '../utils/reference'
 
-const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000'
+const API_BASE_URL = import.meta.env.VITE_API_URL ?? '/api'
 
 const FAILURE_TYPES: FailureType[] = [
   'Network Lost After Request Sent',
@@ -93,7 +93,7 @@ export function NetworkFailureInjection() {
     setIsSubmitting(true)
 
     try {
-      const res = await fetch(`${API_BASE_URL}/api/inject-failure`, {
+      const res = await fetch(`${API_BASE_URL}/inject-failure`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

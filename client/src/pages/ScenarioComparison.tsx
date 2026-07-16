@@ -5,7 +5,7 @@ import { Skeleton } from '../components/Skeleton'
 import type { PaymentMethod } from '../context/TransactionContext'
 import { toReferenceNumber } from '../utils/reference'
 
-const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000'
+const API_BASE_URL = import.meta.env.VITE_API_URL ?? '/api'
 const SLOT_COUNT = 3
 
 interface FirestoreTimestamp {
@@ -81,7 +81,7 @@ export function ScenarioComparison() {
     setIsLoading(true)
     setError(null)
 
-    fetch(`${API_BASE_URL}/api/transactions`)
+    fetch(`${API_BASE_URL}/transactions`)
       .then(async (res) => {
         const body = await res.json()
         if (!res.ok) throw new Error(body.error ?? 'Failed to load simulations')

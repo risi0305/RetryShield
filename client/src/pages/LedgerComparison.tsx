@@ -9,7 +9,7 @@ import { useTransaction } from '../context/TransactionContext'
 import { getFriendlyErrorMessage } from '../utils/friendlyError'
 import { toReferenceNumber } from '../utils/reference'
 
-const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000'
+const API_BASE_URL = import.meta.env.VITE_API_URL ?? '/api'
 
 interface FetchedTransaction {
   idempotencyKey: string
@@ -120,7 +120,7 @@ export function LedgerComparison() {
     setIsLoading(true)
     setError(null)
 
-    fetch(`${API_BASE_URL}/api/transactions/${transaction.idempotencyKey}`)
+    fetch(`${API_BASE_URL}/transactions/${transaction.idempotencyKey}`)
       .then(async (res) => {
         const body = await res.json()
         if (!res.ok) throw new Error(body.error ?? 'Failed to load transaction')
@@ -146,7 +146,7 @@ export function LedgerComparison() {
     setIsSessionLoading(true)
     setSessionError(null)
 
-    fetch(`${API_BASE_URL}/api/transactions`)
+    fetch(`${API_BASE_URL}/transactions`)
       .then(async (res) => {
         const body = await res.json()
         if (!res.ok) throw new Error(body.error ?? 'Failed to load simulations')

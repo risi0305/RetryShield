@@ -6,7 +6,7 @@ import { useTransaction } from '../context/TransactionContext'
 import { useToast } from '../context/ToastContext'
 import { getFriendlyErrorMessage } from '../utils/friendlyError'
 
-const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000'
+const API_BASE_URL = import.meta.env.VITE_API_URL ?? '/api'
 
 function Spinner() {
   return (
@@ -55,7 +55,7 @@ export function AiRootCauseAnalysis() {
     setIsLoading(true)
 
     try {
-      const res = await fetch(`${API_BASE_URL}/api/analyze`, {
+      const res = await fetch(`${API_BASE_URL}/analyze`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ idempotencyKey: transaction.idempotencyKey }),

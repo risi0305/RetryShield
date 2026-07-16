@@ -11,7 +11,7 @@ import { useTransaction, type PaymentMethod } from '../context/TransactionContex
 import { getFriendlyErrorMessage } from '../utils/friendlyError'
 import { toReferenceNumber } from '../utils/reference'
 
-const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000'
+const API_BASE_URL = import.meta.env.VITE_API_URL ?? '/api'
 
 interface FirestoreTimestamp {
   _seconds: number
@@ -228,7 +228,7 @@ export function Dashboard() {
     setIsLoading(true)
     setError(null)
 
-    fetch(`${API_BASE_URL}/api/dashboard`)
+    fetch(`${API_BASE_URL}/dashboard`)
       .then(async (res) => {
         const body = await res.json()
         if (!res.ok) throw new Error(body.error ?? 'Failed to load dashboard stats')
@@ -257,7 +257,7 @@ export function Dashboard() {
     setIsProtectedLoading(true)
     setProtectedError(null)
 
-    fetch(`${API_BASE_URL}/api/transactions`)
+    fetch(`${API_BASE_URL}/transactions`)
       .then(async (res) => {
         const body = await res.json()
         if (!res.ok) throw new Error(body.error ?? 'Failed to load simulations')

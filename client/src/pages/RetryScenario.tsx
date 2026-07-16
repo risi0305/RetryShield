@@ -6,7 +6,7 @@ import { useTransaction } from '../context/TransactionContext'
 import { useToast } from '../context/ToastContext'
 import { getFriendlyErrorMessage } from '../utils/friendlyError'
 
-const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000'
+const API_BASE_URL = import.meta.env.VITE_API_URL ?? '/api'
 const POLL_INTERVAL_MS = 2000
 const AUTO_ADVANCE_DELAY_MS = 1500
 const MAX_ATTEMPTS = 3
@@ -116,7 +116,7 @@ export function RetryScenario() {
 
   async function pollStatus(key: string): Promise<string | null> {
     try {
-      const res = await fetch(`${API_BASE_URL}/api/transactions/${key}`)
+      const res = await fetch(`${API_BASE_URL}/transactions/${key}`)
       const body = await res.json()
       if (res.ok && typeof body.transaction?.status === 'string') {
         setLiveStatus(body.transaction.status)
@@ -176,7 +176,7 @@ export function RetryScenario() {
     setIsSubmitting(true)
 
     try {
-      const res = await fetch(`${API_BASE_URL}/api/retry`, {
+      const res = await fetch(`${API_BASE_URL}/retry`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ idempotencyKey: transaction.idempotencyKey }),

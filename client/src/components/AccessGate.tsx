@@ -1,6 +1,6 @@
 import { type FormEvent, type ReactNode, useState } from 'react'
 
-const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000'
+const API_BASE_URL = import.meta.env.VITE_API_URL ?? '/api'
 const SESSION_KEY = 'retryshield-access-granted'
 
 function ShieldIcon() {
@@ -34,7 +34,7 @@ export function AccessGate({ children }: { children: ReactNode }) {
     setError(null)
 
     try {
-      const res = await fetch(`${API_BASE_URL}/api/access/verify`, {
+      const res = await fetch(`${API_BASE_URL}/access/verify`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code }),

@@ -8,7 +8,7 @@ import { useToast } from '../context/ToastContext'
 import { getFriendlyErrorMessage } from '../utils/friendlyError'
 import { toReferenceNumber } from '../utils/reference'
 
-const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000'
+const API_BASE_URL = import.meta.env.VITE_API_URL ?? '/api'
 const STEP_DELAY_MS = 450
 const PRESET_AUTO_SUBMIT_DELAY_MS = 600
 const DEFAULT_PRESET_AMOUNT = '500'
@@ -138,7 +138,7 @@ export function PaymentFlowSimulator() {
       }
     })()
 
-    const request = fetch(`${API_BASE_URL}/api/pay`, {
+    const request = fetch(`${API_BASE_URL}/pay`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
