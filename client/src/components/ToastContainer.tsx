@@ -9,6 +9,7 @@ const VARIANT_BORDER: Record<ToastVariant, string> = {
   success: 'border-emerald-600/40',
   warning: 'border-amber-600/40',
   ai: 'border-violet-600/40',
+  error: 'border-rose-600/40',
 }
 
 const VARIANT_ICON_COLOR: Record<ToastVariant, string> = {
@@ -16,6 +17,7 @@ const VARIANT_ICON_COLOR: Record<ToastVariant, string> = {
   success: 'text-emerald-700 dark:text-emerald-400',
   warning: 'text-amber-700 dark:text-amber-400',
   ai: 'text-violet-700 dark:text-purple-400',
+  error: 'text-rose-700 dark:text-rose-400',
 }
 
 function InfoIcon() {
@@ -55,6 +57,15 @@ function SparkleIcon() {
   )
 }
 
+function ErrorIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+      <circle cx="12" cy="12" r="10" />
+      <path d="M15 9l-6 6M9 9l6 6" />
+    </svg>
+  )
+}
+
 function ToastIcon({ variant }: { variant: ToastVariant }) {
   switch (variant) {
     case 'success':
@@ -63,6 +74,8 @@ function ToastIcon({ variant }: { variant: ToastVariant }) {
       return <WarningIcon />
     case 'ai':
       return <SparkleIcon />
+    case 'error':
+      return <ErrorIcon />
     default:
       return <InfoIcon />
   }
@@ -124,7 +137,7 @@ export function ToastContainer() {
   if (toasts.length === 0) return null
 
   return (
-    <div className="pointer-events-none fixed right-4 top-24 z-50 flex w-full max-w-sm flex-col gap-2 sm:right-6">
+    <div className="pointer-events-none fixed inset-x-4 top-24 z-50 flex flex-col gap-2 sm:inset-x-auto sm:right-6 sm:w-full sm:max-w-sm">
       {toasts.map((toast) => (
         <ToastCard key={toast.id} toast={toast} onDismiss={dismissToast} />
       ))}

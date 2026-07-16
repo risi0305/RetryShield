@@ -5,6 +5,8 @@ import { StatusBadge } from '../components/StatusBadge'
 import { Toggle } from '../components/Toggle'
 import { useTransaction, type FailurePoint, type FailureType } from '../context/TransactionContext'
 import { useToast } from '../context/ToastContext'
+import { getFriendlyErrorMessage } from '../utils/friendlyError'
+import { toReferenceNumber } from '../utils/reference'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000'
 
@@ -107,16 +109,17 @@ export function NetworkFailureInjection() {
 
       setTransaction({
         ...transaction,
+        status: body.transaction?.status ?? transaction.status,
         failureType: body.transaction?.failureType ?? null,
         failurePoint: body.transaction?.failurePoint ?? null,
       })
       showToast(
-        simulateFailure ? 'Failure injected successfully' : 'Clean path applied — no failure simulated',
+        simulateFailure ? 'Failure injected — awaiting customer retry' : 'Clean path applied — no failure simulated',
         simulateFailure ? 'warning' : 'info',
       )
       navigate('/retry')
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Something went wrong')
+      setError(getFriendlyErrorMessage(err, 'Failed to apply failure injection'))
     } finally {
       setIsSubmitting(false)
     }
@@ -158,7 +161,9 @@ export function NetworkFailureInjection() {
           <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-lg shadow-black/5 dark:border-slate-800 dark:bg-slate-900 dark:shadow-black/20">
             <div className="mb-6 rounded-lg border border-slate-200 bg-slate-100 px-4 py-3 text-sm text-slate-500 dark:border-slate-800 dark:bg-slate-800/40 dark:text-slate-400">
               Transaction{' '}
-              <span className="font-mono text-slate-700 dark:text-slate-300">{transaction.idempotencyKey}</span>
+              <span className="font-mono text-slate-700 dark:text-slate-300">
+                {toReferenceNumber(transaction.idempotencyKey)}
+              </span>
             </div>
 
             <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">

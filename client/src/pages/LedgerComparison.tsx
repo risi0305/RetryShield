@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { ErrorState } from '../components/ErrorState'
 import { PageLayout } from '../components/PageLayout'
 import { Skeleton } from '../components/Skeleton'
 import { useTheme } from '../context/ThemeContext'
 import { useTransaction } from '../context/TransactionContext'
+import { getFriendlyErrorMessage } from '../utils/friendlyError'
+import { toReferenceNumber } from '../utils/reference'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000'
 
@@ -104,6 +107,8 @@ export function LedgerComparison() {
   const [totalSaved, setTotalSaved] = useState(0)
   const [isSessionLoading, setIsSessionLoading] = useState(true)
   const [sessionError, setSessionError] = useState<string | null>(null)
+  const [retryToken, setRetryToken] = useState(0)
+  const [sessionRetryToken, setSessionRetryToken] = useState(0)
 
   useEffect(() => {
     if (!transaction) {
@@ -125,7 +130,7 @@ export function LedgerComparison() {
         if (!cancelled) setFetched(data)
       })
       .catch((err) => {
-        if (!cancelled) setError(err instanceof Error ? err.message : 'Something went wrong')
+        if (!cancelled) setError(getFriendlyErrorMessage(err, 'Failed to load transaction'))
       })
       .finally(() => {
         if (!cancelled) setIsLoading(false)
@@ -134,7 +139,7 @@ export function LedgerComparison() {
     return () => {
       cancelled = true
     }
-  }, [transaction])
+  }, [transaction, retryToken])
 
   useEffect(() => {
     let cancelled = false
@@ -159,7 +164,7 @@ export function LedgerComparison() {
         setTotalSaved(running)
       })
       .catch((err) => {
-        if (!cancelled) setSessionError(err instanceof Error ? err.message : 'Something went wrong')
+        if (!cancelled) setSessionError(getFriendlyErrorMessage(err, 'Failed to load simulations'))
       })
       .finally(() => {
         if (!cancelled) setIsSessionLoading(false)
@@ -168,7 +173,7 @@ export function LedgerComparison() {
     return () => {
       cancelled = true
     }
-  }, [transaction?.idempotencyKey])
+  }, [transaction?.idempotencyKey, sessionRetryToken])
 
   const isDark = theme === 'dark'
   const gridStroke = isDark ? '#1e293b' : '#e2e8f0'
@@ -202,9 +207,9 @@ export function LedgerComparison() {
             <LedgerCardSkeleton />
           </div>
         ) : error ? (
-          <p className="mt-8 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700 dark:border-rose-900 dark:bg-rose-950/50 dark:text-rose-300">
-            {error}
-          </p>
+          <div className="mt-8">
+            <ErrorState message={error} onRetry={() => setRetryToken((n) => n + 1)} />
+          </div>
         ) : fetched ? (
           <>
             <div className="mt-8 grid gap-6 lg:grid-cols-2">
@@ -219,20 +224,20 @@ export function LedgerComparison() {
                   <table className="w-full text-left text-sm">
                     <thead>
                       <tr className="text-slate-500">
-                        <th className="pb-2 font-medium">Txn ID</th>
-                        <th className="pb-2 font-medium">Amount (₹)</th>
+                        <th className="pb-2 pr-4 font-medium">Txn ID</th>
+                        <th className="pb-2 pr-4 font-medium">Amount (₹)</th>
                         <th className="pb-2 font-medium">Status</th>
                       </tr>
                     </thead>
                     <tbody className="text-slate-700 dark:text-slate-200">
                       <tr className="border-t border-slate-200 dark:border-slate-800">
-                        <td className="max-w-[140px] truncate py-2 font-mono">{fetched.idempotencyKey}</td>
-                        <td className="py-2">₹{fetched.amount}</td>
+                        <td className="max-w-[140px] truncate py-2 pr-4 font-mono">{toReferenceNumber(fetched.idempotencyKey)}</td>
+                        <td className="py-2 pr-4">₹{fetched.amount}</td>
                         <td className="py-2">Success</td>
                       </tr>
                       <tr className="border-t border-slate-200 dark:border-slate-800">
-                        <td className="max-w-[140px] truncate py-2 font-mono">{fetched.idempotencyKey}</td>
-                        <td className="py-2">₹{fetched.amount}</td>
+                        <td className="max-w-[140px] truncate py-2 pr-4 font-mono">{toReferenceNumber(fetched.idempotencyKey)}</td>
+                        <td className="py-2 pr-4">₹{fetched.amount}</td>
                         <td className="py-2">Success</td>
                       </tr>
                     </tbody>
@@ -257,15 +262,15 @@ export function LedgerComparison() {
                   <table className="w-full text-left text-sm">
                     <thead>
                       <tr className="text-slate-500">
-                        <th className="pb-2 font-medium">Txn ID</th>
-                        <th className="pb-2 font-medium">Amount (₹)</th>
+                        <th className="pb-2 pr-4 font-medium">Txn ID</th>
+                        <th className="pb-2 pr-4 font-medium">Amount (₹)</th>
                         <th className="pb-2 font-medium">Status</th>
                       </tr>
                     </thead>
                     <tbody className="text-slate-700 dark:text-slate-200">
                       <tr className="border-t border-slate-200 dark:border-slate-800">
-                        <td className="max-w-[140px] truncate py-2 font-mono">{fetched.idempotencyKey}</td>
-                        <td className="py-2">₹{fetched.amount}</td>
+                        <td className="max-w-[140px] truncate py-2 pr-4 font-mono">{toReferenceNumber(fetched.idempotencyKey)}</td>
+                        <td className="py-2 pr-4">₹{fetched.amount}</td>
                         <td className="py-2">{formatStatus(fetched.status)}</td>
                       </tr>
                     </tbody>
@@ -284,7 +289,15 @@ export function LedgerComparison() {
               </section>
             </div>
 
-            <div className="mt-6 flex items-start gap-3 rounded-xl border border-l-4 border-slate-200 border-l-sky-600 bg-slate-50 px-4 py-3 text-sm text-sky-800 dark:border-slate-800 dark:border-l-sky-500 dark:bg-slate-800/40 dark:text-sky-200">
+            <div className="mt-6 flex items-start gap-3 rounded-xl border border-l-4 border-slate-200 border-l-emerald-600 bg-slate-50 px-4 py-3 text-sm text-emerald-800 dark:border-slate-800 dark:border-l-emerald-500 dark:bg-slate-800/40 dark:text-emerald-200">
+              <CheckIcon />
+              <p>
+                <span className="font-semibold">No refund needed</span> — the duplicate charge was blocked before it
+                could occur, unlike systems that charge twice and reverse one afterward.
+              </p>
+            </div>
+
+            <div className="mt-4 flex items-start gap-3 rounded-xl border border-l-4 border-slate-200 border-l-sky-600 bg-slate-50 px-4 py-3 text-sm text-sky-800 dark:border-slate-800 dark:border-l-sky-500 dark:bg-slate-800/40 dark:text-sky-200">
               <InfoIcon />
               <p>Retry Protection prevents duplicate charges using a unique transaction ID (Idempotency Key).</p>
             </div>
@@ -302,13 +315,19 @@ export function LedgerComparison() {
                 {isSessionLoading ? (
                   <Skeleton className="h-48 w-full" />
                 ) : sessionError ? (
-                  <p className="rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700 dark:border-rose-900 dark:bg-rose-950/50 dark:text-rose-300">
-                    {sessionError}
-                  </p>
+                  <ErrorState message={sessionError} onRetry={() => setSessionRetryToken((n) => n + 1)} />
                 ) : cumulativePoints.length === 0 ? (
-                  <p className="text-sm text-slate-500 dark:text-slate-400">
-                    No simulations yet — run more scenarios to build up this chart.
-                  </p>
+                  <div className="flex flex-col items-center gap-2 py-6 text-center">
+                    <p className="text-sm text-slate-500 dark:text-slate-400">
+                      No simulations yet — run more scenarios to build up this chart.
+                    </p>
+                    <Link
+                      to="/payment-flow"
+                      className="text-sm font-medium text-blue-700 hover:underline dark:text-blue-400"
+                    >
+                      Start New Simulation →
+                    </Link>
+                  </div>
                 ) : (
                   <>
                     <div className="h-48 w-full">

@@ -1,10 +1,13 @@
 import { jsPDF } from 'jspdf'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { ErrorState } from '../components/ErrorState'
 import { PageLayout } from '../components/PageLayout'
 import { Skeleton } from '../components/Skeleton'
 import { useTransaction } from '../context/TransactionContext'
 import { useToast } from '../context/ToastContext'
+import { getFriendlyErrorMessage } from '../utils/friendlyError'
+import { toReferenceNumber } from '../utils/reference'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000'
 
@@ -129,7 +132,7 @@ function buildReportPdf(fetched: FetchedTransaction, aiReport: { summary: string
   doc.text('RetryShield — Incident Report', marginX, y)
   y += 24
 
-  paragraph(`Idempotency Key: ${fetched.idempotencyKey}`, true)
+  paragraph(`Reference: ${toReferenceNumber(fetched.idempotencyKey)}`, true)
   paragraph(`Generated: ${new Date().toLocaleString()}`)
 
   heading('Event Timeline')
@@ -152,7 +155,7 @@ function buildReportPdf(fetched: FetchedTransaction, aiReport: { summary: string
     }
   }
 
-  doc.save(`retryshield-report-${fetched.idempotencyKey}.pdf`)
+  doc.save(`retryshield-report-${toReferenceNumber(fetched.idempotencyKey)}.pdf`)
 }
 
 export function IncidentTimeline() {
@@ -163,6 +166,7 @@ export function IncidentTimeline() {
   const [fetched, setFetched] = useState<FetchedTransaction | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [retryToken, setRetryToken] = useState(0)
 
   useEffect(() => {
     if (!transaction) {
@@ -184,7 +188,7 @@ export function IncidentTimeline() {
         if (!cancelled) setFetched(data)
       })
       .catch((err) => {
-        if (!cancelled) setError(err instanceof Error ? err.message : 'Something went wrong')
+        if (!cancelled) setError(getFriendlyErrorMessage(err, 'Failed to load transaction'))
       })
       .finally(() => {
         if (!cancelled) setIsLoading(false)
@@ -193,7 +197,7 @@ export function IncidentTimeline() {
     return () => {
       cancelled = true
     }
-  }, [transaction])
+  }, [transaction, retryToken])
 
   function handleDownloadReport() {
     if (!fetched) return
@@ -208,7 +212,7 @@ export function IncidentTimeline() {
           <span className="inline-flex max-w-[260px] items-center gap-2 rounded-full border border-slate-300 bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-300">
             <span className="flex-shrink-0 whitespace-nowrap">Simulation ID:</span>
             <span className="min-w-0 flex-1 truncate font-mono text-slate-700 dark:text-slate-200">
-              {transaction.idempotencyKey}
+              {toReferenceNumber(transaction.idempotencyKey)}
             </span>
           </span>
         )
@@ -234,9 +238,9 @@ export function IncidentTimeline() {
         ) : isLoading ? (
           <TimelineSkeleton />
         ) : error ? (
-          <p className="mt-8 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700 dark:border-rose-900 dark:bg-rose-950/50 dark:text-rose-300">
-            {error}
-          </p>
+          <div className="mt-8">
+            <ErrorState message={error} onRetry={() => setRetryToken((n) => n + 1)} />
+          </div>
         ) : fetched ? (
           <>
             <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-lg shadow-black/5 dark:border-slate-800 dark:bg-slate-900 dark:shadow-black/20">

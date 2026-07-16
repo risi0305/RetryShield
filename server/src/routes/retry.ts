@@ -24,16 +24,26 @@ retryRouter.post('/', async (req, res) => {
     if (existing.status === 'success' || existing.status === 'duplicate_ignored') {
       // Idempotency check: a prior attempt already succeeded (or was already
       // flagged as a duplicate), so this retry is a duplicate — record it as
-      // such instead of charging again.
+      // such instead of charging again. This is the only branch that ever
+      // marks a transaction `duplicate_ignored`, which is what the Dashboard
+      // and Ledger Comparison "duplicates prevented" stats key off of.
       await appendEvent(idempotencyKey, {
         step: 'duplicate_detected',
         detail: 'Duplicate request detected by system',
       })
       await appendEvent(idempotencyKey, {
         step: 'retry_ignored',
-        detail: 'Retry ignored — Original transaction returned',
+        detail: 'Duplicate request detected — original transaction returned',
       })
       await setTransactionStatus(idempotencyKey, 'duplicate_ignored')
+    } else if (existing.status === 'failed') {
+      // The original attempt genuinely failed — a retry here is a brand new
+      // attempt, not a duplicate, so it's processed as a fresh charge.
+      await appendEvent(idempotencyKey, {
+        step: 'retry_after_failure',
+        detail: 'Retry attempted after genuine failure — new charge processed',
+      })
+      await setTransactionStatus(idempotencyKey, 'success')
     } else {
       await appendEvent(idempotencyKey, {
         step: 'retry_processed',

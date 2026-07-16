@@ -6,6 +6,7 @@ import { Dashboard } from './pages/Dashboard'
 import { History } from './pages/History'
 import { IncidentTimeline } from './pages/IncidentTimeline'
 import { LedgerComparison } from './pages/LedgerComparison'
+import { Menu } from './pages/Menu'
 import { NetworkFailureInjection } from './pages/NetworkFailureInjection'
 import { PaymentFlowSimulator } from './pages/PaymentFlowSimulator'
 import { RetryScenario } from './pages/RetryScenario'
@@ -16,7 +17,8 @@ function App() {
     <TransactionProvider>
       <ToastContainer />
       <Routes>
-        <Route path="/" element={<Dashboard />} />
+        <Route path="/" element={<Menu />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/history" element={<History />} />
         <Route path="/scenario-comparison" element={<ScenarioComparison />} />
         <Route path="/payment-flow" element={<PaymentFlowSimulator />} />

@@ -3,6 +3,7 @@ import { EmptyState } from '../components/EmptyState'
 import { PageLayout } from '../components/PageLayout'
 import { Skeleton } from '../components/Skeleton'
 import type { PaymentMethod } from '../context/TransactionContext'
+import { toReferenceNumber } from '../utils/reference'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000'
 const SLOT_COUNT = 3
@@ -34,10 +35,6 @@ function formatStatus(status: string) {
     .split('_')
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ')
-}
-
-function shortenKey(key: string) {
-  return key.length > 11 ? `${key.slice(0, 8)}...` : key
 }
 
 function wasDuplicatePrevented(tx: ComparisonTransaction) {
@@ -117,7 +114,7 @@ export function ScenarioComparison() {
   const selected = selectedKeys.map((key) => (key ? byKey.get(key) : undefined)).filter(Boolean) as ComparisonTransaction[]
 
   const rows: { label: string; render: (tx: ComparisonTransaction) => ReactNode }[] = [
-    { label: 'Idempotency Key', render: (tx) => <span className="font-mono">{shortenKey(tx.idempotencyKey)}</span> },
+    { label: 'Reference', render: (tx) => <span className="font-mono">{toReferenceNumber(tx.idempotencyKey)}</span> },
     { label: 'Amount', render: (tx) => `₹${tx.amount}` },
     { label: 'Status', render: (tx) => formatStatus(tx.status) },
     { label: 'Failure Type', render: (tx) => tx.failureType ?? '—' },
@@ -174,7 +171,7 @@ export function ScenarioComparison() {
                           value={tx.idempotencyKey}
                           disabled={otherSelected.includes(tx.idempotencyKey)}
                         >
-                          {shortenKey(tx.idempotencyKey)} — ₹{tx.amount} — {formatStatus(tx.status)}
+                          {toReferenceNumber(tx.idempotencyKey)} — ₹{tx.amount} — {formatStatus(tx.status)}
                         </option>
                       ))}
                     </select>
@@ -190,13 +187,13 @@ export function ScenarioComparison() {
             <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
               Side-by-Side Comparison
             </h2>
-            <table className="mt-4 w-full text-left text-sm">
+            <table className="mt-4 min-w-full text-left text-sm">
               <thead>
                 <tr className="text-slate-500">
-                  <th className="pb-2 pr-6 font-medium">Attribute</th>
+                  <th className="whitespace-nowrap pb-2 pr-6 font-medium">Attribute</th>
                   {selected.map((tx) => (
-                    <th key={tx.idempotencyKey} className="pb-2 pr-6 font-mono font-medium">
-                      {shortenKey(tx.idempotencyKey)}
+                    <th key={tx.idempotencyKey} className="whitespace-nowrap pb-2 pr-6 font-mono font-medium">
+                      {toReferenceNumber(tx.idempotencyKey)}
                     </th>
                   ))}
                 </tr>
@@ -204,9 +201,11 @@ export function ScenarioComparison() {
               <tbody className="text-slate-700 dark:text-slate-200">
                 {rows.map((row) => (
                   <tr key={row.label} className="border-t border-slate-200 dark:border-slate-800">
-                    <td className="py-2 pr-6 font-medium text-slate-500 dark:text-slate-400">{row.label}</td>
+                    <td className="whitespace-nowrap py-2 pr-6 font-medium text-slate-500 dark:text-slate-400">
+                      {row.label}
+                    </td>
                     {selected.map((tx) => (
-                      <td key={tx.idempotencyKey} className="py-2 pr-6">
+                      <td key={tx.idempotencyKey} className="whitespace-nowrap py-2 pr-6">
                         {row.render(tx)}
                       </td>
                     ))}

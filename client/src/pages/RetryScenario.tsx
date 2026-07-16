@@ -4,6 +4,7 @@ import { PageLayout } from '../components/PageLayout'
 import { StatusBadge } from '../components/StatusBadge'
 import { useTransaction } from '../context/TransactionContext'
 import { useToast } from '../context/ToastContext'
+import { getFriendlyErrorMessage } from '../utils/friendlyError'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000'
 const POLL_INTERVAL_MS = 2000
@@ -40,6 +41,22 @@ function CheckIcon() {
       className="h-6 w-6"
     >
       <path d="M20 6 9 17l-5-5" />
+    </svg>
+  )
+}
+
+function XIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-6 w-6"
+    >
+      <path d="M18 6 6 18M6 6l12 12" />
     </svg>
   )
 }
@@ -174,18 +191,23 @@ export function RetryScenario() {
       setAttempts((prev) => [...prev, { attemptNumber: prev.length + 1, status: resolvedStatus }])
 
       if (resolvedStatus === 'duplicate_ignored') {
-        showToast('Duplicate charge prevented!', 'success')
+        showToast(`Duplicate charge blocked — ₹${transaction.amount} saved`, 'success')
       } else if (resolvedStatus === 'success') {
         showToast('Payment retried successfully', 'success')
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Something went wrong')
+      setError(getFriendlyErrorMessage(err, 'Retry failed'))
     } finally {
       setIsSubmitting(false)
     }
   }
 
-  const isResolved = liveStatus !== null && liveStatus !== 'pending'
+  // "Response Lost" payments already succeeded on the backend the moment
+  // they were created — the ambiguity is purely a display choice on this
+  // page, masking that truth until the customer actually retries.
+  const isMaskedResponseLost =
+    transaction?.simulatedScenario === 'response_lost' && attempts.length === 0 && liveStatus === 'success'
+  const isResolved = !isMaskedResponseLost && liveStatus !== null && liveStatus !== 'pending'
   const resolvedStyle = liveStatus ? RESOLVED_STYLES[liveStatus] : undefined
   const attemptsUsed = attempts.length
   const attemptsExhausted = attemptsUsed >= MAX_ATTEMPTS
@@ -220,7 +242,7 @@ export function RetryScenario() {
                       : 'animate-pulse border-amber-600/30 bg-amber-600/10 text-amber-700 dark:text-amber-400'
                   }`}
                 >
-                  {isResolved ? <CheckIcon /> : <WarningIcon />}
+                  {isResolved ? (liveStatus === 'failed' ? <XIcon /> : <CheckIcon />) : <WarningIcon />}
                 </div>
                 <div className="flex-1">
                   <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">

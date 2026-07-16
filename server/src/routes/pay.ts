@@ -1,9 +1,15 @@
 import { Router } from 'express'
-import { createTransaction, getTransactionByKey, type PaymentMethod } from '../services/transactionService.js'
+import {
+  createTransaction,
+  getTransactionByKey,
+  type PaymentMethod,
+  type SimulatedScenario,
+} from '../services/transactionService.js'
 
 export const payRouter = Router()
 
-const PAYMENT_METHODS: PaymentMethod[] = ['UPI', 'Card']
+const PAYMENT_METHODS: PaymentMethod[] = ['UPI', 'Card', 'Net Banking', 'QR']
+const SIMULATED_SCENARIOS: SimulatedScenario[] = ['response_lost', 'genuine_failure']
 
 function isAlreadyExists(err: unknown): boolean {
   const code = (err as { code?: unknown } | undefined)?.code
@@ -11,7 +17,7 @@ function isAlreadyExists(err: unknown): boolean {
 }
 
 payRouter.post('/', async (req, res) => {
-  const { idempotencyKey, amount, paymentMethod } = req.body ?? {}
+  const { idempotencyKey, amount, paymentMethod, simulateFailure, failureMode } = req.body ?? {}
 
   if (typeof idempotencyKey !== 'string' || idempotencyKey.length === 0) {
     return res.status(400).json({ error: 'idempotencyKey is required' })
@@ -22,9 +28,21 @@ payRouter.post('/', async (req, res) => {
   if (!PAYMENT_METHODS.includes(paymentMethod)) {
     return res.status(400).json({ error: `paymentMethod must be one of: ${PAYMENT_METHODS.join(', ')}` })
   }
+  if (simulateFailure && !SIMULATED_SCENARIOS.includes(failureMode)) {
+    return res.status(400).json({ error: `failureMode must be one of: ${SIMULATED_SCENARIOS.join(', ')}` })
+  }
+
+  const scenario: SimulatedScenario | null = simulateFailure ? (failureMode as SimulatedScenario) : null
+  const status = scenario === 'genuine_failure' ? 'failed' : 'success'
 
   try {
-    const transaction = await createTransaction({ idempotencyKey, amount, paymentMethod })
+    const transaction = await createTransaction({
+      idempotencyKey,
+      amount,
+      paymentMethod,
+      status,
+      simulatedScenario: scenario,
+    })
     return res.status(201).json({ transaction })
   } catch (err) {
     if (isAlreadyExists(err)) {

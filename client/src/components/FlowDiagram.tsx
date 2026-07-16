@@ -6,7 +6,7 @@ export const FLOW_STEPS = [
   'Issuing Bank',
 ] as const
 
-function ArrowIcon({ lit }: { lit: boolean }) {
+function ArrowIcon({ lit, complete }: { lit: boolean; complete: boolean }) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -16,7 +16,11 @@ function ArrowIcon({ lit }: { lit: boolean }) {
       strokeLinecap="round"
       strokeLinejoin="round"
       className={`h-5 w-5 flex-shrink-0 transition-colors duration-300 ${
-        lit ? 'text-blue-700 dark:text-blue-400' : 'text-slate-300 dark:text-slate-700'
+        lit
+          ? complete
+            ? 'text-emerald-700 dark:text-emerald-400'
+            : 'text-blue-700 dark:text-blue-400'
+          : 'text-slate-300 dark:text-slate-700'
       }`}
     >
       <path d="M5 12h14" />
@@ -28,30 +32,35 @@ function ArrowIcon({ lit }: { lit: boolean }) {
 interface FlowDiagramProps {
   /** -1 = nothing lit yet; N = steps [0..N] are lit */
   activeStep: number
+  /** true once the payment has genuinely completed with no failure — lights the whole rail green */
+  complete?: boolean
 }
 
-export function FlowDiagram({ activeStep }: FlowDiagramProps) {
+export function FlowDiagram({ activeStep, complete = false }: FlowDiagramProps) {
   return (
     <div className="flex items-center justify-between gap-2 overflow-x-auto py-2">
       {FLOW_STEPS.map((step, i) => {
         const isLit = activeStep >= i
+        const isSuccess = complete && isLit
         return (
           <div key={step} className="flex items-center gap-2">
             <div
               className={`flex min-w-[110px] flex-col items-center gap-2 rounded-xl border px-4 py-3 text-center text-xs font-medium transition-all duration-300 ${
-                isLit
-                  ? 'border-blue-600 bg-blue-600/10 text-blue-700 shadow-[0_0_0_3px_rgba(37,99,235,0.12)] dark:text-blue-300'
-                  : 'border-slate-300 bg-slate-100 text-slate-500 dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-400'
+                isSuccess
+                  ? 'border-emerald-600 bg-emerald-600/10 text-emerald-700 shadow-[0_0_0_3px_rgba(5,150,105,0.12)] dark:text-emerald-300'
+                  : isLit
+                    ? 'border-blue-600 bg-blue-600/10 text-blue-700 shadow-[0_0_0_3px_rgba(37,99,235,0.12)] dark:text-blue-300'
+                    : 'border-slate-300 bg-slate-100 text-slate-500 dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-400'
               }`}
             >
               <span
                 className={`h-2.5 w-2.5 rounded-full transition-colors duration-300 ${
-                  isLit ? 'animate-pulse bg-blue-600' : 'bg-slate-400 dark:bg-slate-600'
+                  isSuccess ? 'bg-emerald-600' : isLit ? 'animate-pulse bg-blue-600' : 'bg-slate-400 dark:bg-slate-600'
                 }`}
               />
               {step}
             </div>
-            {i < FLOW_STEPS.length - 1 && <ArrowIcon lit={activeStep > i} />}
+            {i < FLOW_STEPS.length - 1 && <ArrowIcon lit={activeStep > i} complete={complete} />}
           </div>
         )
       })}

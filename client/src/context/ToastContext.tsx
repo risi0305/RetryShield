@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useRef, useState, type ReactNode } from 'react'
 
-export type ToastVariant = 'info' | 'success' | 'warning' | 'ai'
+export type ToastVariant = 'info' | 'success' | 'warning' | 'ai' | 'error'
 
 export interface ToastItem {
   id: number

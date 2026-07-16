@@ -2,7 +2,7 @@ import { FieldValue, Timestamp, type QueryDocumentSnapshot } from 'firebase-admi
 import { db } from './firebase.js'
 
 export type TransactionStatus = 'pending' | 'success' | 'failed' | 'duplicate_ignored'
-export type PaymentMethod = 'UPI' | 'Card'
+export type PaymentMethod = 'UPI' | 'Card' | 'Net Banking' | 'QR'
 
 export type FailureType =
   | 'Network Lost After Request Sent'
@@ -13,6 +13,11 @@ export type FailurePoint =
   | 'Between Customer and Merchant'
   | 'Between PSP and Bank'
   | 'Between Bank and PSP (response)'
+
+// Tags *why* a payment ended up the way it did at creation time. Unlike
+// `status`, this never changes afterward — it's the permanent record of
+// which of the three Start Payment outcomes produced this transaction.
+export type SimulatedScenario = 'response_lost' | 'genuine_failure'
 
 export interface TransactionEvent {
   step: string
@@ -25,6 +30,7 @@ export interface TransactionDocument {
   amount: number
   paymentMethod: PaymentMethod
   status: TransactionStatus
+  simulatedScenario: SimulatedScenario | null
   failureType: FailureType | null
   failurePoint: FailurePoint | null
   createdAt: Timestamp
@@ -36,6 +42,7 @@ export interface NewTransactionInput {
   amount: number
   paymentMethod: PaymentMethod
   status?: TransactionStatus
+  simulatedScenario?: SimulatedScenario | null
   failureType?: FailureType | null
   failurePoint?: FailurePoint | null
 }
@@ -53,6 +60,8 @@ function requireDb() {
 
 export async function createTransaction(data: NewTransactionInput): Promise<TransactionDocument> {
   const createdAt = Timestamp.now()
+  const status = data.status ?? 'success'
+  const simulatedScenario = data.simulatedScenario ?? null
 
   // The simulator processes these steps synchronously, so they're logged as
   // real events right away rather than left for the frontend to fabricate.
@@ -60,14 +69,51 @@ export async function createTransaction(data: NewTransactionInput): Promise<Tran
     { step: 'payment_initiated', detail: `Customer initiates payment of ₹${data.amount}`, timestamp: Timestamp.now() },
     { step: 'request_sent_to_psp', detail: 'Request sent to PSP', timestamp: Timestamp.now() },
     { step: 'request_forwarded_to_bank', detail: 'Request forwarded to Bank', timestamp: Timestamp.now() },
-    { step: 'bank_approved', detail: 'Bank approves the transaction', timestamp: Timestamp.now() },
   ]
+
+  if (status === 'failed') {
+    // Genuine failure: the bank actually declines — no charge is made.
+    initialEvents.push({
+      step: 'bank_declined',
+      detail: 'Bank declines the transaction (insufficient funds / timeout)',
+      timestamp: Timestamp.now(),
+    })
+    initialEvents.push({
+      step: 'payment_failed',
+      detail: 'Payment failed — no charge was made',
+      timestamp: Timestamp.now(),
+    })
+  } else {
+    initialEvents.push({ step: 'bank_approved', detail: 'Bank approves the transaction', timestamp: Timestamp.now() })
+
+    // A payment only stays in `pending` when it's created that way on purpose
+    // (e.g. a failure scenario re-opens it) — the default path completes for
+    // real, so it earns its own terminal event.
+    if (status === 'success') {
+      initialEvents.push({
+        step: 'payment_success',
+        detail: 'Payment completed successfully — funds settled',
+        timestamp: Timestamp.now(),
+      })
+
+      if (simulatedScenario === 'response_lost') {
+        // The system's ledger already knows this succeeded — only the
+        // confirmation back to the customer went missing.
+        initialEvents.push({
+          step: 'confirmation_lost',
+          detail: "Confirmation lost in transit — customer did not receive a response",
+          timestamp: Timestamp.now(),
+        })
+      }
+    }
+  }
 
   const doc: TransactionDocument = {
     idempotencyKey: data.idempotencyKey,
     amount: data.amount,
     paymentMethod: data.paymentMethod,
-    status: data.status ?? 'pending',
+    status,
+    simulatedScenario,
     failureType: data.failureType ?? null,
     failurePoint: data.failurePoint ?? null,
     createdAt,

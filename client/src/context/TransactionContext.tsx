@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, type ReactNode } from 'react'
 
-export type PaymentMethod = 'UPI' | 'Card'
+export type PaymentMethod = 'UPI' | 'Card' | 'Net Banking' | 'QR'
 
 export type FailureType =
   | 'Network Lost After Request Sent'
@@ -12,11 +12,14 @@ export type FailurePoint =
   | 'Between PSP and Bank'
   | 'Between Bank and PSP (response)'
 
+export type SimulatedScenario = 'response_lost' | 'genuine_failure'
+
 export interface TransactionSummary {
   idempotencyKey: string
   amount: number
   paymentMethod: PaymentMethod
   status: string
+  simulatedScenario?: SimulatedScenario | null
   failureType?: FailureType | null
   failurePoint?: FailurePoint | null
 }

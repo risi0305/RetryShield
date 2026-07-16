@@ -22,8 +22,8 @@ function ShieldIcon() {
 export function Header({ right }: { right?: ReactNode }) {
   return (
     <header className="border-b border-slate-200 bg-white/80 backdrop-blur dark:border-slate-800 dark:bg-slate-900/80">
-      <div className="mx-auto flex max-w-5xl items-center justify-between gap-2 px-6 py-4">
-        <div className="flex items-center gap-4">
+      <div className="flex w-full flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-8 sm:py-4">
+        <div className="flex flex-wrap items-center gap-3 sm:gap-4">
           <Link to="/" className="flex items-center gap-2">
             <ShieldIcon />
             <span className="text-lg font-semibold tracking-tight text-slate-900 dark:text-slate-100">
@@ -31,6 +31,12 @@ export function Header({ right }: { right?: ReactNode }) {
             </span>
           </Link>
           <ThemeToggle />
+          <Link
+            to="/dashboard"
+            className="text-sm font-medium text-slate-500 transition-colors hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+          >
+            Dashboard
+          </Link>
           <Link
             to="/history"
             className="text-sm font-medium text-slate-500 transition-colors hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
@@ -44,7 +50,7 @@ export function Header({ right }: { right?: ReactNode }) {
             Compare
           </Link>
         </div>
-        {right && <div className="flex items-center gap-3">{right}</div>}
+        {right && <div className="flex flex-wrap items-center gap-2 sm:gap-3">{right}</div>}
       </div>
     </header>
   )

@@ -4,6 +4,7 @@ import { PageLayout } from '../components/PageLayout'
 import { Skeleton } from '../components/Skeleton'
 import { useTransaction } from '../context/TransactionContext'
 import { useToast } from '../context/ToastContext'
+import { getFriendlyErrorMessage } from '../utils/friendlyError'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000'
 
@@ -63,8 +64,8 @@ export function AiRootCauseAnalysis() {
       if (!res.ok) throw new Error(body.error ?? 'Failed to generate AI report')
       setAiReport({ summary: body.summary, keyFactors: body.keyFactors })
       showToast('AI report generated', 'ai')
-    } catch {
-      setError('Something went wrong generating the AI report. Please try again.')
+    } catch (err) {
+      setError(getFriendlyErrorMessage(err, 'Failed to generate the AI report. Please try again.'))
     } finally {
       setIsLoading(false)
     }

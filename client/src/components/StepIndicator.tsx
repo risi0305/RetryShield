@@ -15,7 +15,7 @@ export function StepIndicator() {
 
   return (
     <nav className="border-b border-slate-200 bg-slate-100/60 dark:border-slate-800 dark:bg-slate-900/40">
-      <div className="mx-auto flex max-w-5xl items-center gap-1.5 overflow-x-auto px-6 py-3">
+      <div className="flex w-full items-center gap-1.5 overflow-x-auto px-4 py-3 sm:px-8">
         {STEPS.map((step, i) => {
           const isActive = i === currentIndex
           const isDone = currentIndex >= 0 && i < currentIndex

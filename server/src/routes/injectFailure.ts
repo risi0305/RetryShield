@@ -3,6 +3,7 @@ import {
   appendEvent,
   getTransactionByKey,
   setFailureConfig,
+  setTransactionStatus,
   type FailurePoint,
   type FailureType,
 } from '../services/transactionService.js'
@@ -52,6 +53,10 @@ injectFailureRouter.post('/', async (req, res) => {
         step: 'network_failure',
         detail: `Network failure – Response lost (${failureType}, ${failurePoint}, timeout ${delaySeconds}s)`,
       })
+      // The payment already completed — simulating a failure here means
+      // "pretend the bank's response never made it back", which reopens the
+      // transaction so Retry Scenario has something real to resolve.
+      await setTransactionStatus(idempotencyKey, 'pending')
     } else {
       await setFailureConfig(idempotencyKey, { failureType: null, failurePoint: null })
       await appendEvent(idempotencyKey, {
