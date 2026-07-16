@@ -1,17 +1,17 @@
 type BadgeColor = 'green' | 'red' | 'blue' | 'slate'
 
 const DOT_COLOR: Record<BadgeColor, string> = {
-  green: 'bg-emerald-600',
-  red: 'bg-rose-600',
-  blue: 'bg-blue-600',
+  green: 'bg-status-success',
+  red: 'bg-status-failed',
+  blue: 'bg-brand-primary',
   slate: 'bg-slate-500',
 }
 
 const TEXT_COLOR: Record<BadgeColor, string> = {
-  green: 'text-emerald-700 dark:text-emerald-300',
-  red: 'text-rose-700 dark:text-rose-300',
-  blue: 'text-blue-700 dark:text-blue-300',
-  slate: 'text-slate-600 dark:text-slate-400',
+  green: 'text-status-success',
+  red: 'text-status-failed',
+  blue: 'text-brand-primary',
+  slate: 'text-muted',
 }
 
 const PULSE_COLORS: BadgeColor[] = ['green', 'blue']

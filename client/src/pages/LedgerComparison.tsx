@@ -80,7 +80,7 @@ function LedgerCardSkeleton() {
       <div className="border-b border-slate-200 bg-slate-50 px-6 py-4 dark:border-slate-800 dark:bg-slate-800/40">
         <Skeleton className="h-4 w-40" />
       </div>
-      <div className="bg-white p-6 dark:bg-slate-900">
+      <div className="bg-surface p-6 dark:bg-surface-dark">
         <div className="space-y-3">
           <Skeleton className="h-3 w-full" />
           <Skeleton className="h-3 w-full" />
@@ -186,17 +186,17 @@ export function LedgerComparison() {
     <PageLayout>
       <main className="mx-auto max-w-5xl px-6 py-10">
         <h1 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">Ledger Comparison</h1>
-        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+        <p className="mt-1 text-sm text-muted">
           See what this transaction's ledger looks like with and without idempotency protection.
         </p>
 
         {!transaction ? (
-          <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-lg shadow-black/5 dark:border-slate-800 dark:bg-slate-900 dark:shadow-black/20">
-            <p className="text-slate-600 dark:text-slate-300">Start a payment first to compare its ledger.</p>
+          <section className="mt-8 rounded-2xl border border-slate-200 bg-surface p-6 text-center shadow-lg shadow-black/5 dark:border-slate-800 dark:bg-surface-dark dark:shadow-black/20">
+            <p className="text-muted">Start a payment first to compare its ledger.</p>
             <button
               type="button"
               onClick={() => navigate('/payment-flow')}
-              className="mt-4 rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-md shadow-black/10 transition-colors hover:bg-slate-700 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
+              className="mt-4 rounded-lg bg-brand-primary px-4 py-2 text-sm font-medium text-white shadow-md shadow-black/10 transition-colors hover:bg-brand-primary-hover"
             >
               Go to Payment Flow Simulator
             </button>
@@ -214,16 +214,16 @@ export function LedgerComparison() {
           <>
             <div className="mt-8 grid gap-6 lg:grid-cols-2">
               <section className="overflow-hidden rounded-2xl border border-slate-200 shadow-lg shadow-black/5 dark:border-slate-800 dark:shadow-black/20">
-                <div className="flex items-center justify-between border-b border-l-4 border-slate-200 border-l-rose-600 bg-slate-50 px-6 py-4 dark:border-slate-800 dark:border-l-rose-500 dark:bg-slate-800/40">
-                  <h2 className="font-semibold text-rose-700 dark:text-rose-300">Without Retry Protection</h2>
-                  <span className="rounded-full border border-rose-600/40 bg-rose-600/10 px-2 py-0.5 text-[11px] font-medium uppercase tracking-wide text-rose-700 dark:text-rose-300">
+                <div className="flex items-center justify-between border-b border-l-4 border-slate-200 border-l-status-failed bg-slate-50 px-6 py-4 dark:border-slate-800 dark:bg-slate-800/40">
+                  <h2 className="text-lg font-semibold text-status-failed">Without Retry Protection</h2>
+                  <span className="rounded-full border border-status-failed/40 bg-status-failed/10 px-2 py-0.5 text-[11px] font-medium uppercase tracking-wide text-status-failed">
                     Hypothetical
                   </span>
                 </div>
-                <div className="bg-white p-6 dark:bg-slate-900">
+                <div className="bg-surface p-6 dark:bg-surface-dark">
                   <table className="w-full text-left text-sm">
                     <thead>
-                      <tr className="text-slate-500">
+                      <tr className="text-muted">
                         <th className="pb-2 pr-4 font-medium">Txn ID</th>
                         <th className="pb-2 pr-4 font-medium">Amount (₹)</th>
                         <th className="pb-2 font-medium">Status</th>
@@ -242,26 +242,26 @@ export function LedgerComparison() {
                       </tr>
                     </tbody>
                   </table>
-                  <p className="mt-3 text-xs italic text-rose-700/80 dark:text-rose-300/80">
+                  <p className="mt-3 text-xs italic text-status-failed/80">
                     Simulated — this duplicate charge did not actually happen.
                   </p>
                   <div className="mt-4 flex items-center justify-between border-t border-slate-200 pt-4 dark:border-slate-800">
-                    <span className="text-sm font-medium text-slate-500 dark:text-slate-400">Total Debit</span>
-                    <span className="text-lg font-semibold text-rose-700 dark:text-rose-300">₹{fetched.amount * 2}</span>
+                    <span className="text-sm font-medium text-muted">Total Debit</span>
+                    <span className="text-lg font-semibold text-status-failed">₹{fetched.amount * 2}</span>
                   </div>
                 </div>
               </section>
 
               <section className="overflow-hidden rounded-2xl border border-slate-200 shadow-lg shadow-black/5 dark:border-slate-800 dark:shadow-black/20">
-                <div className="border-b border-l-4 border-slate-200 border-l-emerald-600 bg-slate-50 px-6 py-4 dark:border-slate-800 dark:border-l-emerald-500 dark:bg-slate-800/40">
-                  <h2 className="font-semibold text-emerald-700 dark:text-emerald-300">
+                <div className="border-b border-l-4 border-slate-200 border-l-status-success bg-slate-50 px-6 py-4 dark:border-slate-800 dark:bg-slate-800/40">
+                  <h2 className="text-lg font-semibold text-status-success">
                     With Retry Protection (Idempotency)
                   </h2>
                 </div>
-                <div className="bg-white p-6 dark:bg-slate-900">
+                <div className="bg-surface p-6 dark:bg-surface-dark">
                   <table className="w-full text-left text-sm">
                     <thead>
-                      <tr className="text-slate-500">
+                      <tr className="text-muted">
                         <th className="pb-2 pr-4 font-medium">Txn ID</th>
                         <th className="pb-2 pr-4 font-medium">Amount (₹)</th>
                         <th className="pb-2 font-medium">Status</th>
@@ -275,13 +275,13 @@ export function LedgerComparison() {
                       </tr>
                     </tbody>
                   </table>
-                  <p className="mt-3 flex items-center gap-1.5 text-sm font-medium text-emerald-700 dark:text-emerald-400">
+                  <p className="mt-3 flex items-center gap-1.5 text-sm font-medium text-status-success">
                     <CheckIcon />
                     Retry Detected – Duplicate Ignored
                   </p>
                   <div className="mt-4 flex items-center justify-between border-t border-slate-200 pt-4 dark:border-slate-800">
-                    <span className="text-sm font-medium text-slate-500 dark:text-slate-400">Total Debit</span>
-                    <span className="text-lg font-semibold text-emerald-700 dark:text-emerald-300">
+                    <span className="text-sm font-medium text-muted">Total Debit</span>
+                    <span className="text-lg font-semibold text-status-success">
                       ₹{fetched.amount}
                     </span>
                   </div>
@@ -289,7 +289,7 @@ export function LedgerComparison() {
               </section>
             </div>
 
-            <div className="mt-6 flex items-start gap-3 rounded-xl border border-l-4 border-slate-200 border-l-emerald-600 bg-slate-50 px-4 py-3 text-sm text-emerald-800 dark:border-slate-800 dark:border-l-emerald-500 dark:bg-slate-800/40 dark:text-emerald-200">
+            <div className="mt-6 flex items-start gap-3 rounded-xl border border-l-4 border-slate-200 border-l-status-success bg-slate-50 px-4 py-3 text-sm text-status-success dark:border-slate-800 dark:bg-slate-800/40">
               <CheckIcon />
               <p>
                 <span className="font-semibold">No refund needed</span> — the duplicate charge was blocked before it
@@ -297,33 +297,33 @@ export function LedgerComparison() {
               </p>
             </div>
 
-            <div className="mt-4 flex items-start gap-3 rounded-xl border border-l-4 border-slate-200 border-l-sky-600 bg-slate-50 px-4 py-3 text-sm text-sky-800 dark:border-slate-800 dark:border-l-sky-500 dark:bg-slate-800/40 dark:text-sky-200">
+            <div className="mt-4 flex items-start gap-3 rounded-xl border border-l-4 border-slate-200 border-l-slate-400 bg-slate-50 px-4 py-3 text-sm text-slate-700 dark:border-slate-800 dark:border-l-slate-600 dark:bg-slate-800/40 dark:text-slate-300">
               <InfoIcon />
               <p>Retry Protection prevents duplicate charges using a unique transaction ID (Idempotency Key).</p>
             </div>
 
             <section className="mt-6 overflow-hidden rounded-2xl border border-slate-200 shadow-lg shadow-black/5 dark:border-slate-800 dark:shadow-black/20">
-              <div className="border-b border-l-4 border-slate-200 border-l-emerald-600 bg-slate-50 px-6 py-4 dark:border-slate-800 dark:border-l-emerald-500 dark:bg-slate-800/40">
-                <h2 className="font-semibold text-emerald-700 dark:text-emerald-300">
+              <div className="border-b border-l-4 border-slate-200 border-l-status-success bg-slate-50 px-6 py-4 dark:border-slate-800 dark:bg-slate-800/40">
+                <h2 className="text-lg font-semibold text-status-success">
                   Total Amount Saved by Idempotency Protection
                 </h2>
-                <p className="mt-0.5 text-xs text-emerald-700/80 dark:text-emerald-300/80">
+                <p className="mt-0.5 text-xs text-status-success/80">
                   Cumulative across every simulation run this session
                 </p>
               </div>
-              <div className="bg-white p-6 dark:bg-slate-900">
+              <div className="bg-surface p-6 dark:bg-surface-dark">
                 {isSessionLoading ? (
                   <Skeleton className="h-48 w-full" />
                 ) : sessionError ? (
                   <ErrorState message={sessionError} onRetry={() => setSessionRetryToken((n) => n + 1)} />
                 ) : cumulativePoints.length === 0 ? (
                   <div className="flex flex-col items-center gap-2 py-6 text-center">
-                    <p className="text-sm text-slate-500 dark:text-slate-400">
+                    <p className="text-sm text-muted">
                       No simulations yet — run more scenarios to build up this chart.
                     </p>
                     <Link
                       to="/payment-flow"
-                      className="text-sm font-medium text-blue-700 hover:underline dark:text-blue-400"
+                      className="text-sm font-medium text-brand-primary hover:underline"
                     >
                       Start New Simulation →
                     </Link>
@@ -357,7 +357,7 @@ export function LedgerComparison() {
                           <Line
                             type="stepAfter"
                             dataKey="cumulative"
-                            stroke="#059669"
+                            stroke="#10B981"
                             strokeWidth={2}
                             dot={false}
                             activeDot={{ r: 4 }}
@@ -365,7 +365,7 @@ export function LedgerComparison() {
                         </LineChart>
                       </ResponsiveContainer>
                     </div>
-                    <p className="mt-3 text-sm font-medium text-emerald-700 dark:text-emerald-300">
+                    <p className="mt-3 text-sm font-medium text-status-success">
                       Total saved so far: ₹{totalSaved}
                     </p>
                   </>
@@ -375,7 +375,7 @@ export function LedgerComparison() {
 
             <Link
               to="/incident-timeline"
-              className="mt-6 inline-block rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-md shadow-black/10 transition-colors hover:bg-slate-700 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
+              className="mt-6 inline-block rounded-lg bg-brand-primary px-4 py-2 text-sm font-medium text-white shadow-md shadow-black/10 transition-colors hover:bg-brand-primary-hover"
             >
               View Incident Timeline
             </Link>

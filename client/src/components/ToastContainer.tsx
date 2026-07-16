@@ -5,19 +5,19 @@ const DISPLAY_DURATION_MS = 3500
 const EXIT_ANIMATION_MS = 200
 
 const VARIANT_BORDER: Record<ToastVariant, string> = {
-  info: 'border-blue-600/40',
-  success: 'border-emerald-600/40',
-  warning: 'border-amber-600/40',
-  ai: 'border-violet-600/40',
-  error: 'border-rose-600/40',
+  info: 'border-brand-primary/40',
+  success: 'border-status-success/40',
+  warning: 'border-status-warning/40',
+  ai: 'border-status-duplicate/40',
+  error: 'border-status-failed/40',
 }
 
 const VARIANT_ICON_COLOR: Record<ToastVariant, string> = {
-  info: 'text-blue-700 dark:text-blue-400',
-  success: 'text-emerald-700 dark:text-emerald-400',
-  warning: 'text-amber-700 dark:text-amber-400',
-  ai: 'text-violet-700 dark:text-purple-400',
-  error: 'text-rose-700 dark:text-rose-400',
+  info: 'text-brand-primary',
+  success: 'text-status-success',
+  warning: 'text-status-warning',
+  ai: 'text-status-duplicate',
+  error: 'text-status-failed',
 }
 
 function InfoIcon() {
@@ -111,7 +111,7 @@ function ToastCard({ toast, onDismiss }: { toast: ToastItem; onDismiss: (id: num
 
   return (
     <div
-      className={`pointer-events-auto flex items-start gap-3 rounded-xl border bg-white px-4 py-3 shadow-lg shadow-black/10 transition-all duration-200 dark:bg-slate-900 dark:shadow-black/30 ${
+      className={`pointer-events-auto flex items-start gap-3 rounded-xl border bg-surface px-4 py-3 shadow-lg shadow-black/10 transition-all duration-200 dark:bg-surface-dark dark:shadow-black/30 ${
         VARIANT_BORDER[toast.variant]
       } ${isVisible ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0'}`}
     >

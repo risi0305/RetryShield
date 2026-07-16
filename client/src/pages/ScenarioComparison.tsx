@@ -123,9 +123,9 @@ export function ScenarioComparison() {
       label: 'Duplicate Prevented',
       render: (tx) =>
         wasDuplicatePrevented(tx) ? (
-          <span className="font-medium text-emerald-700 dark:text-emerald-400">Yes</span>
+          <span className="font-medium text-status-success">Yes</span>
         ) : (
-          <span className="text-slate-500">No</span>
+          <span className="text-muted">No</span>
         ),
     },
     { label: 'Time to Resolution', render: (tx) => resolutionDuration(tx) },
@@ -135,15 +135,15 @@ export function ScenarioComparison() {
     <PageLayout showSteps={false}>
       <main className="mx-auto max-w-5xl px-6 py-10">
         <h1 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">Scenario Comparison</h1>
-        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+        <p className="mt-1 text-sm text-muted">
           Pick 2–3 past simulations to compare their failure patterns and recovery time side by side.
         </p>
 
-        <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-lg shadow-black/5 dark:border-slate-800 dark:bg-slate-900 dark:shadow-black/20">
+        <section className="mt-8 rounded-2xl border border-slate-200 bg-surface p-6 shadow-lg shadow-black/5 dark:border-slate-800 dark:bg-surface-dark dark:shadow-black/20">
           {isLoading ? (
             <PickerSkeleton />
           ) : error ? (
-            <p className="rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700 dark:border-rose-900 dark:bg-rose-950/50 dark:text-rose-300">
+            <p className="rounded-lg border border-status-failed/40 bg-status-failed/5 px-4 py-3 text-sm text-status-failed dark:bg-status-failed/10">
               {error}
             </p>
           ) : !transactions || transactions.length < 2 ? (
@@ -157,12 +157,12 @@ export function ScenarioComparison() {
               {Array.from({ length: SLOT_COUNT }).map((_, slotIndex) => {
                 const otherSelected = selectedKeys.filter((_, i) => i !== slotIndex)
                 return (
-                  <label key={slotIndex} className="flex flex-col gap-1.5 text-sm text-slate-600 dark:text-slate-300">
+                  <label key={slotIndex} className="flex flex-col gap-1.5 text-sm text-muted">
                     {`Simulation ${slotIndex + 1}${slotIndex === SLOT_COUNT - 1 ? ' (optional)' : ''}`}
                     <select
                       value={selectedKeys[slotIndex] ?? ''}
                       onChange={(e) => handleSlotChange(slotIndex, e.target.value)}
-                      className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none transition-colors focus:border-blue-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+                      className="rounded-lg border border-slate-300 bg-surface px-3 py-2 text-slate-900 outline-none transition-colors focus:border-brand-primary dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
                     >
                       <option value="">— Select —</option>
                       {transactions.map((tx) => (
@@ -183,13 +183,13 @@ export function ScenarioComparison() {
         </section>
 
         {selected.length >= 2 && (
-          <section className="mt-6 overflow-x-auto rounded-2xl border border-slate-200 bg-white p-6 shadow-lg shadow-black/5 dark:border-slate-800 dark:bg-slate-900 dark:shadow-black/20">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+          <section className="mt-6 overflow-x-auto rounded-2xl border border-slate-200 bg-surface p-6 shadow-lg shadow-black/5 dark:border-slate-800 dark:bg-surface-dark dark:shadow-black/20">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-muted">
               Side-by-Side Comparison
             </h2>
             <table className="mt-4 min-w-full text-left text-sm">
               <thead>
-                <tr className="text-slate-500">
+                <tr className="text-muted">
                   <th className="whitespace-nowrap pb-2 pr-6 font-medium">Attribute</th>
                   {selected.map((tx) => (
                     <th key={tx.idempotencyKey} className="whitespace-nowrap pb-2 pr-6 font-mono font-medium">
@@ -201,7 +201,7 @@ export function ScenarioComparison() {
               <tbody className="text-slate-700 dark:text-slate-200">
                 {rows.map((row) => (
                   <tr key={row.label} className="border-t border-slate-200 dark:border-slate-800">
-                    <td className="whitespace-nowrap py-2 pr-6 font-medium text-slate-500 dark:text-slate-400">
+                    <td className="whitespace-nowrap py-2 pr-6 font-medium text-muted">
                       {row.label}
                     </td>
                     {selected.map((tx) => (
@@ -217,7 +217,7 @@ export function ScenarioComparison() {
         )}
 
         {selected.length === 1 && (
-          <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">
+          <p className="mt-4 text-sm text-muted">
             Pick at least one more simulation to see the comparison.
           </p>
         )}

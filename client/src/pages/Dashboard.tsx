@@ -56,16 +56,16 @@ interface DashboardStats {
 }
 
 const STATUS_PILL: Record<string, string> = {
-  success: 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400',
-  pending: 'bg-amber-500/10 text-amber-700 dark:text-amber-400',
-  failed: 'bg-rose-500/10 text-rose-700 dark:text-rose-400',
-  duplicate_ignored: 'bg-violet-500/10 text-violet-700 dark:text-violet-400',
+  success: 'bg-status-success/10 text-status-success',
+  pending: 'bg-status-warning/10 text-status-warning',
+  failed: 'bg-status-failed/10 text-status-failed',
+  duplicate_ignored: 'bg-status-duplicate/10 text-status-duplicate',
 }
 
 const ACTIVITY_ICON: Record<ActivityItem['tone'], { Icon: LucideIcon; classes: string }> = {
-  success: { Icon: CheckCircle2, classes: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' },
-  failed: { Icon: XCircle, classes: 'bg-rose-500/10 text-rose-600 dark:text-rose-400' },
-  duplicate: { Icon: ShieldAlert, classes: 'bg-violet-500/10 text-violet-600 dark:text-violet-400' },
+  success: { Icon: CheckCircle2, classes: 'bg-status-success/10 text-status-success' },
+  failed: { Icon: XCircle, classes: 'bg-status-failed/10 text-status-failed' },
+  duplicate: { Icon: ShieldAlert, classes: 'bg-status-duplicate/10 text-status-duplicate' },
 }
 
 function formatStatus(status: string) {
@@ -136,21 +136,21 @@ function StatCard({
 }) {
   const animated = useCountUp(value)
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm shadow-black/5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-black/10 dark:border-slate-800 dark:bg-slate-900 dark:shadow-black/20">
+    <div className="rounded-2xl border border-slate-200 bg-surface p-5 shadow-sm shadow-black/5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-black/10 dark:border-slate-800 dark:bg-surface-dark dark:shadow-black/20">
       <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${iconClasses}`}>
         <Icon size={20} strokeWidth={2} />
       </div>
-      <p className="mt-4 text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+      <p className="mt-4 text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
         {formatter(animated)}
       </p>
-      <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{label}</p>
+      <p className="mt-1 text-sm text-muted">{label}</p>
     </div>
   )
 }
 
 function StatCardSkeleton() {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm shadow-black/5 dark:border-slate-800 dark:bg-slate-900 dark:shadow-black/20">
+    <div className="rounded-2xl border border-slate-200 bg-surface p-5 shadow-sm shadow-black/5 dark:border-slate-800 dark:bg-surface-dark dark:shadow-black/20">
       <Skeleton className="h-10 w-10 rounded-xl" />
       <Skeleton className="mt-4 h-8 w-20" />
       <Skeleton className="mt-2 h-3 w-28" />
@@ -169,11 +169,11 @@ function DashboardSkeleton() {
       </div>
 
       <div className="mt-8 grid gap-6 lg:grid-cols-5">
-        <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm shadow-black/5 dark:border-slate-800 dark:bg-slate-900 dark:shadow-black/20 lg:col-span-3">
+        <section className="rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm shadow-black/5 dark:border-slate-800 dark:bg-surface-dark dark:shadow-black/20 lg:col-span-3">
           <Skeleton className="h-3 w-40" />
           <Skeleton className="mt-4 h-64 w-full" />
         </section>
-        <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm shadow-black/5 dark:border-slate-800 dark:bg-slate-900 dark:shadow-black/20 lg:col-span-2">
+        <section className="rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm shadow-black/5 dark:border-slate-800 dark:bg-surface-dark dark:shadow-black/20 lg:col-span-2">
           <Skeleton className="h-3 w-32" />
           <div className="mt-4 space-y-4">
             {Array.from({ length: 6 }).map((_, i) => (
@@ -186,12 +186,12 @@ function DashboardSkeleton() {
         </section>
       </div>
 
-      <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm shadow-black/5 dark:border-slate-800 dark:bg-slate-900 dark:shadow-black/20">
+      <section className="mt-8 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm shadow-black/5 dark:border-slate-800 dark:bg-surface-dark dark:shadow-black/20">
         <Skeleton className="h-3 w-48" />
         <Skeleton className="mt-4 h-40 w-full" />
       </section>
 
-      <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm shadow-black/5 dark:border-slate-800 dark:bg-slate-900 dark:shadow-black/20">
+      <section className="mt-8 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm shadow-black/5 dark:border-slate-800 dark:bg-surface-dark dark:shadow-black/20">
         <Skeleton className="h-3 w-36" />
         <div className="mt-4 space-y-3">
           {Array.from({ length: 5 }).map((_, i) => (
@@ -305,11 +305,12 @@ export function Dashboard() {
   return (
     <PageLayout
       showSteps={false}
+      headerTagline="Payment Incident Replay & Retry Protection"
       headerRight={
         <button
           type="button"
           onClick={() => navigate('/payment-flow')}
-          className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-md shadow-black/10 transition-colors hover:bg-slate-700 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
+          className="rounded-lg bg-brand-primary px-4 py-2 text-sm font-medium text-white shadow-md shadow-black/10 transition-colors hover:bg-brand-primary-hover"
         >
           Start New Simulation
         </button>
@@ -317,7 +318,7 @@ export function Dashboard() {
     >
       <main className="mx-auto max-w-7xl px-6 py-10">
         <h1 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">Dashboard</h1>
-        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+        <p className="mt-1 text-sm text-muted">
           An overview of every payment incident simulated so far.
         </p>
 
@@ -347,13 +348,12 @@ export function Dashboard() {
                 icon={TrendingUp}
                 value={stats.successRate}
                 formatter={(n) => `${n.toFixed(1)}%`}
-                iconClasses="bg-blue-600/10 text-blue-700 dark:text-blue-400"
               />
             </div>
 
             <div className="mt-8 grid gap-6 lg:grid-cols-5">
-              <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm shadow-black/5 dark:border-slate-800 dark:bg-slate-900 dark:shadow-black/20 lg:col-span-3">
-                <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+              <section className="rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm shadow-black/5 dark:border-slate-800 dark:bg-surface-dark dark:shadow-black/20 lg:col-span-3">
+                <h2 className="text-sm font-semibold uppercase tracking-wide text-muted">
                   Simulations — Last 7 Days
                 </h2>
                 <div className="mt-4 h-64">
@@ -361,8 +361,8 @@ export function Dashboard() {
                     <AreaChart data={stats.dailyCounts}>
                       <defs>
                         <linearGradient id="simulationsGradient" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#2563eb" stopOpacity={0.25} />
-                          <stop offset="95%" stopColor="#2563eb" stopOpacity={0} />
+                          <stop offset="5%" stopColor="#4F46E5" stopOpacity={0.25} />
+                          <stop offset="95%" stopColor="#4F46E5" stopOpacity={0} />
                         </linearGradient>
                       </defs>
                       <CartesianGrid strokeDasharray="3 3" stroke={gridStroke} vertical={false} />
@@ -395,7 +395,7 @@ export function Dashboard() {
                       <Area
                         type="monotone"
                         dataKey="count"
-                        stroke="#2563eb"
+                        stroke="#4F46E5"
                         strokeWidth={2}
                         fill="url(#simulationsGradient)"
                         name="Simulations"
@@ -405,13 +405,13 @@ export function Dashboard() {
                 </div>
               </section>
 
-              <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm shadow-black/5 dark:border-slate-800 dark:bg-slate-900 dark:shadow-black/20 lg:col-span-2">
-                <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+              <section className="rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm shadow-black/5 dark:border-slate-800 dark:bg-surface-dark dark:shadow-black/20 lg:col-span-2">
+                <h2 className="text-sm font-semibold uppercase tracking-wide text-muted">
                   Recent Activity
                 </h2>
 
                 {stats.recentActivity.length === 0 ? (
-                  <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">
+                  <p className="mt-4 text-sm text-muted">
                     No activity yet — start a simulation to see events here.
                   </p>
                 ) : (
@@ -425,7 +425,7 @@ export function Dashboard() {
                           </span>
                           <div className="min-w-0 flex-1">
                             <p className="truncate text-sm text-slate-700 dark:text-slate-200">{item.message}</p>
-                            <p className="text-xs text-slate-400 dark:text-slate-500">{timeAgo(item.timestamp)}</p>
+                            <p className="text-xs text-muted">{timeAgo(item.timestamp)}</p>
                           </div>
                         </li>
                       )
@@ -435,11 +435,11 @@ export function Dashboard() {
               </section>
             </div>
 
-            <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm shadow-black/5 dark:border-slate-800 dark:bg-slate-900 dark:shadow-black/20">
-              <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+            <section className="mt-8 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm shadow-black/5 dark:border-slate-800 dark:bg-surface-dark dark:shadow-black/20">
+              <h2 className="text-sm font-semibold uppercase tracking-wide text-muted">
                 Cumulative Amount Protected
               </h2>
-              <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">
+              <p className="mt-0.5 text-xs text-muted">
                 Running value of duplicate charges blocked, across every simulation run
               </p>
 
@@ -450,13 +450,13 @@ export function Dashboard() {
                   <ErrorState message={protectedError} onRetry={() => setProtectedRetryToken((n) => n + 1)} />
                 ) : protectedSeries.length === 0 ? (
                   <div className="flex flex-col items-center gap-2 py-6 text-center">
-                    <p className="text-sm text-slate-500 dark:text-slate-400">
+                    <p className="text-sm text-muted">
                       No simulations yet — start one to see protected value build up here.
                     </p>
                     <button
                       type="button"
                       onClick={() => navigate('/payment-flow')}
-                      className="text-sm font-medium text-blue-700 hover:underline dark:text-blue-400"
+                      className="text-sm font-medium text-brand-primary hover:underline"
                     >
                       Start New Simulation →
                     </button>
@@ -468,8 +468,8 @@ export function Dashboard() {
                         <AreaChart data={protectedSeries}>
                           <defs>
                             <linearGradient id="protectedGradient" x1="0" y1="0" x2="0" y2="1">
-                              <stop offset="5%" stopColor="#059669" stopOpacity={0.25} />
-                              <stop offset="95%" stopColor="#059669" stopOpacity={0} />
+                              <stop offset="5%" stopColor="#10B981" stopOpacity={0.25} />
+                              <stop offset="95%" stopColor="#10B981" stopOpacity={0} />
                             </linearGradient>
                           </defs>
                           <CartesianGrid strokeDasharray="3 3" stroke={gridStroke} vertical={false} />
@@ -496,7 +496,7 @@ export function Dashboard() {
                           <Area
                             type="stepAfter"
                             dataKey="cumulative"
-                            stroke="#059669"
+                            stroke="#10B981"
                             strokeWidth={2}
                             fill="url(#protectedGradient)"
                             name="Cumulative Protected"
@@ -504,7 +504,7 @@ export function Dashboard() {
                         </AreaChart>
                       </ResponsiveContainer>
                     </div>
-                    <p className="mt-3 text-sm font-medium text-emerald-700 dark:text-emerald-300">
+                    <p className="mt-3 text-sm font-medium text-status-success">
                       Total protected so far: ₹{Math.round(stats.totalAmountProtected).toLocaleString('en-IN')}
                     </p>
                   </>
@@ -512,8 +512,8 @@ export function Dashboard() {
               </div>
             </section>
 
-            <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm shadow-black/5 dark:border-slate-800 dark:bg-slate-900 dark:shadow-black/20">
-              <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+            <section className="mt-8 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm shadow-black/5 dark:border-slate-800 dark:bg-surface-dark dark:shadow-black/20">
+              <h2 className="text-sm font-semibold uppercase tracking-wide text-muted">
                 Recent Simulations
               </h2>
 
@@ -529,7 +529,7 @@ export function Dashboard() {
                 <div className="mt-4 overflow-x-auto">
                   <table className="min-w-full text-left text-sm">
                     <thead>
-                      <tr className="text-slate-500">
+                      <tr className="text-muted">
                         <th className="whitespace-nowrap pb-2 pr-6 font-medium">Reference</th>
                         <th className="whitespace-nowrap pb-2 pr-6 font-medium">Amount (₹)</th>
                         <th className="whitespace-nowrap pb-2 pr-6 font-medium">Status</th>
@@ -554,7 +554,7 @@ export function Dashboard() {
                               {formatStatus(sim.status)}
                             </span>
                           </td>
-                          <td className="whitespace-nowrap py-2.5 font-mono text-xs text-slate-500 dark:text-slate-400">
+                          <td className="whitespace-nowrap py-2.5 font-mono text-xs text-muted">
                             {formatTimestamp(sim.createdAt)}
                           </td>
                         </tr>

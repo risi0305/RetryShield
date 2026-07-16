@@ -30,10 +30,10 @@ interface FetchedTransaction {
 }
 
 const FINAL_STATUS_COLOR: Record<string, string> = {
-  success: 'text-emerald-700 dark:text-emerald-400',
-  failed: 'text-rose-700 dark:text-rose-400',
-  pending: 'text-amber-700 dark:text-amber-400',
-  duplicate_ignored: 'text-amber-700 dark:text-amber-400',
+  success: 'text-status-success',
+  failed: 'text-status-failed',
+  pending: 'text-status-warning',
+  duplicate_ignored: 'text-status-duplicate',
 }
 
 function formatTimestamp(ts: FirestoreTimestamp | undefined) {
@@ -52,7 +52,7 @@ function formatStatus(status: string) {
 
 function TimelineSkeleton() {
   return (
-    <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-lg shadow-black/5 dark:border-slate-800 dark:bg-slate-900 dark:shadow-black/20">
+    <section className="mt-8 rounded-2xl border border-slate-200 bg-surface p-6 shadow-lg shadow-black/5 dark:border-slate-800 dark:bg-surface-dark dark:shadow-black/20">
       <ol className="relative border-l-2 border-slate-200 pl-8 dark:border-slate-800">
         {Array.from({ length: 6 }).map((_, i) => (
           <li key={i} className="relative pb-8 last:pb-0">
@@ -209,7 +209,7 @@ export function IncidentTimeline() {
     <PageLayout
       headerRight={
         transaction && (
-          <span className="inline-flex max-w-[260px] items-center gap-2 rounded-full border border-slate-300 bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-300">
+          <span className="inline-flex max-w-[260px] items-center gap-2 rounded-full border border-slate-300 bg-slate-100 px-3 py-1 text-xs font-medium text-muted dark:border-slate-700 dark:bg-slate-800/60">
             <span className="flex-shrink-0 whitespace-nowrap">Simulation ID:</span>
             <span className="min-w-0 flex-1 truncate font-mono text-slate-700 dark:text-slate-200">
               {toReferenceNumber(transaction.idempotencyKey)}
@@ -220,17 +220,17 @@ export function IncidentTimeline() {
     >
       <main className="mx-auto max-w-5xl px-6 py-10">
         <h1 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">Incident Timeline</h1>
-        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+        <p className="mt-1 text-sm text-muted">
           A step-by-step replay of every event recorded for this transaction.
         </p>
 
         {!transaction ? (
-          <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-lg shadow-black/5 dark:border-slate-800 dark:bg-slate-900 dark:shadow-black/20">
-            <p className="text-slate-600 dark:text-slate-300">Start a payment first to see its incident timeline.</p>
+          <section className="mt-8 rounded-2xl border border-slate-200 bg-surface p-6 text-center shadow-lg shadow-black/5 dark:border-slate-800 dark:bg-surface-dark dark:shadow-black/20">
+            <p className="text-muted">Start a payment first to see its incident timeline.</p>
             <button
               type="button"
               onClick={() => navigate('/payment-flow')}
-              className="mt-4 rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-md shadow-black/10 transition-colors hover:bg-slate-700 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
+              className="mt-4 rounded-lg bg-brand-primary px-4 py-2 text-sm font-medium text-white shadow-md shadow-black/10 transition-colors hover:bg-brand-primary-hover"
             >
               Go to Payment Flow Simulator
             </button>
@@ -243,13 +243,13 @@ export function IncidentTimeline() {
           </div>
         ) : fetched ? (
           <>
-            <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-lg shadow-black/5 dark:border-slate-800 dark:bg-slate-900 dark:shadow-black/20">
-              <ol className="relative border-l-2 border-blue-600/30 pl-8">
+            <section className="mt-8 rounded-2xl border border-slate-200 bg-surface p-6 shadow-lg shadow-black/5 dark:border-slate-800 dark:bg-surface-dark dark:shadow-black/20">
+              <ol className="relative border-l-2 border-brand-primary/30 pl-8">
                 {fetched.events.map((event, i) => (
                   <li key={`${event.step}-${i}`} className="relative pb-8 last:pb-0">
-                    <span className="absolute -left-10 top-0.5 h-4 w-4 rounded-full border-2 border-blue-600 bg-white dark:bg-slate-900" />
+                    <span className="absolute -left-10 top-0.5 h-4 w-4 rounded-full border-2 border-brand-primary bg-white dark:bg-slate-900" />
                     <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:gap-4">
-                      <span className="w-36 flex-shrink-0 font-mono text-xs text-slate-500">
+                      <span className="w-36 flex-shrink-0 font-mono text-xs text-muted">
                         {formatTimestamp(event.timestamp)}
                       </span>
                       <span className="text-slate-700 dark:text-slate-200">{event.detail}</span>
@@ -258,9 +258,9 @@ export function IncidentTimeline() {
                 ))}
 
                 <li className="relative">
-                  <span className="absolute -left-10 top-0.5 h-4 w-4 rounded-full border-2 border-blue-600 bg-white dark:bg-slate-900" />
+                  <span className="absolute -left-10 top-0.5 h-4 w-4 rounded-full border-2 border-brand-primary bg-white dark:bg-slate-900" />
                   <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:gap-4">
-                    <span className="w-36 flex-shrink-0 font-mono text-xs text-slate-500">—</span>
+                    <span className="w-36 flex-shrink-0 font-mono text-xs text-muted">—</span>
                     <span className={`font-bold ${FINAL_STATUS_COLOR[fetched.status] ?? 'text-slate-700 dark:text-slate-200'}`}>
                       Final Status: {formatStatus(fetched.status).toUpperCase()}
                     </span>
@@ -272,7 +272,7 @@ export function IncidentTimeline() {
             <div className="mt-6 flex flex-wrap gap-3">
               <Link
                 to="/ai-analysis"
-                className="inline-block rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-md shadow-black/10 transition-colors hover:bg-slate-700 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
+                className="inline-block rounded-lg bg-brand-primary px-4 py-2 text-sm font-medium text-white shadow-md shadow-black/10 transition-colors hover:bg-brand-primary-hover"
               >
                 View AI Root Cause Analysis
               </Link>
@@ -280,7 +280,7 @@ export function IncidentTimeline() {
               <button
                 type="button"
                 onClick={handleDownloadReport}
-                className="inline-flex items-center gap-2 rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
+                className="inline-flex items-center gap-2 rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-muted transition-colors hover:bg-slate-100 dark:border-slate-700 dark:hover:bg-slate-800"
               >
                 <DownloadIcon />
                 Download Report

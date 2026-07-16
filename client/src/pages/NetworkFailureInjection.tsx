@@ -142,31 +142,31 @@ export function NetworkFailureInjection() {
     >
       <main className="mx-auto max-w-5xl px-6 py-10">
         <h1 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">Network Failure Injection</h1>
-        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+        <p className="mt-1 text-sm text-muted">
           Configure how and where this transaction's network path should fail.
         </p>
 
         {!transaction ? (
-          <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-lg shadow-black/5 dark:border-slate-800 dark:bg-slate-900 dark:shadow-black/20">
-            <p className="text-slate-600 dark:text-slate-300">Start a payment first to configure a failure injection.</p>
+          <section className="mt-8 rounded-2xl border border-slate-200 bg-surface p-6 text-center shadow-lg shadow-black/5 dark:border-slate-800 dark:bg-surface-dark dark:shadow-black/20">
+            <p className="text-muted">Start a payment first to configure a failure injection.</p>
             <button
               type="button"
               onClick={() => navigate('/payment-flow')}
-              className="mt-4 rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-md shadow-black/10 transition-colors hover:bg-slate-700 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
+              className="mt-4 rounded-lg bg-brand-primary px-4 py-2 text-sm font-medium text-white shadow-md shadow-black/10 transition-colors hover:bg-brand-primary-hover"
             >
               Go to Payment Flow Simulator
             </button>
           </section>
         ) : (
-          <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-lg shadow-black/5 dark:border-slate-800 dark:bg-slate-900 dark:shadow-black/20">
-            <div className="mb-6 rounded-lg border border-slate-200 bg-slate-100 px-4 py-3 text-sm text-slate-500 dark:border-slate-800 dark:bg-slate-800/40 dark:text-slate-400">
+          <section className="mt-8 rounded-2xl border border-slate-200 bg-surface p-6 shadow-lg shadow-black/5 dark:border-slate-800 dark:bg-surface-dark dark:shadow-black/20">
+            <div className="mb-6 rounded-lg border border-slate-200 bg-slate-100 px-4 py-3 text-sm text-muted dark:border-slate-800 dark:bg-slate-800/40">
               Transaction{' '}
               <span className="font-mono text-slate-700 dark:text-slate-300">
                 {toReferenceNumber(transaction.idempotencyKey)}
               </span>
             </div>
 
-            <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+            <h2 className="text-xs font-semibold uppercase tracking-wide text-muted">
               Quick Presets
             </h2>
             <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -184,12 +184,12 @@ export function NetworkFailureInjection() {
                     onClick={() => applyPreset(preset)}
                     className={`rounded-lg border px-3 py-2.5 text-left text-xs transition-colors ${
                       isActive
-                        ? 'border-blue-600 bg-blue-600/10 text-blue-700 dark:text-blue-300'
-                        : 'border-slate-300 bg-slate-50 text-slate-600 hover:border-blue-400 hover:bg-blue-50 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-300 dark:hover:border-blue-600/50 dark:hover:bg-slate-800'
+                        ? 'border-brand-primary bg-brand-primary/10 text-brand-primary'
+                        : 'border-slate-300 bg-slate-50 text-slate-600 hover:border-brand-primary hover:bg-brand-primary/10 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-300 dark:hover:border-brand-primary/50 dark:hover:bg-slate-800'
                     }`}
                   >
                     <span className="block font-semibold">{preset.label}</span>
-                    <span className="mt-1 block text-slate-500 dark:text-slate-400">
+                    <span className="mt-1 block text-muted">
                       {preset.failureType} · {preset.failurePoint} · {preset.delaySeconds}s
                     </span>
                   </button>
@@ -201,13 +201,13 @@ export function NetworkFailureInjection() {
               <Toggle label="Simulate Network Failure" checked={simulateFailure} onChange={setSimulateFailure} />
 
               <div className="grid gap-4 sm:grid-cols-2">
-                <label className="flex flex-col gap-1.5 text-sm text-slate-600 dark:text-slate-300">
+                <label className="flex flex-col gap-1.5 text-sm text-muted">
                   Failure Type
                   <select
                     value={failureType}
                     onChange={(e) => setFailureType(e.target.value as FailureType)}
                     disabled={!simulateFailure}
-                    className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none transition-colors focus:border-blue-600 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+                    className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none transition-colors focus:border-brand-primary disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
                   >
                     {FAILURE_TYPES.map((type) => (
                       <option key={type} value={type}>
@@ -217,13 +217,13 @@ export function NetworkFailureInjection() {
                   </select>
                 </label>
 
-                <label className="flex flex-col gap-1.5 text-sm text-slate-600 dark:text-slate-300">
+                <label className="flex flex-col gap-1.5 text-sm text-muted">
                   Failure Point
                   <select
                     value={failurePoint}
                     onChange={(e) => setFailurePoint(e.target.value as FailurePoint)}
                     disabled={!simulateFailure}
-                    className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none transition-colors focus:border-blue-600 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+                    className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none transition-colors focus:border-brand-primary disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
                   >
                     {FAILURE_POINTS.map((point) => (
                       <option key={point} value={point}>
@@ -234,7 +234,7 @@ export function NetworkFailureInjection() {
                 </label>
               </div>
 
-              <label className="flex max-w-xs flex-col gap-1.5 text-sm text-slate-600 dark:text-slate-300">
+              <label className="flex max-w-xs flex-col gap-1.5 text-sm text-muted">
                 Delay / Timeout (sec)
                 <input
                   type="number"
@@ -243,7 +243,7 @@ export function NetworkFailureInjection() {
                   value={delaySeconds}
                   onChange={(e) => setDelaySeconds(e.target.value)}
                   disabled={!simulateFailure}
-                  className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none transition-colors focus:border-blue-600 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+                  className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none transition-colors focus:border-brand-primary disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
                 />
               </label>
             </div>
@@ -252,7 +252,7 @@ export function NetworkFailureInjection() {
               type="button"
               onClick={handleApplyAndContinue}
               disabled={isSubmitting}
-              className="mt-6 w-full rounded-lg bg-slate-900 px-4 py-2.5 font-medium text-white shadow-md shadow-black/10 transition-colors hover:bg-slate-700 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white disabled:cursor-not-allowed disabled:opacity-50"
+              className="mt-6 w-full rounded-lg bg-brand-primary px-4 py-2.5 font-medium text-white shadow-md shadow-black/10 transition-colors hover:bg-brand-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isSubmitting ? 'Applying…' : 'Apply & Continue'}
             </button>
@@ -260,7 +260,7 @@ export function NetworkFailureInjection() {
         )}
 
         {error && (
-          <p className="mt-4 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700 dark:border-rose-900 dark:bg-rose-950/50 dark:text-rose-300">
+          <p className="mt-4 rounded-lg border border-status-failed/40 bg-status-failed/10 px-4 py-3 text-sm text-status-failed">
             {error}
           </p>
         )}

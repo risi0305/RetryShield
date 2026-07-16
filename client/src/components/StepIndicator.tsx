@@ -14,7 +14,7 @@ export function StepIndicator() {
   const currentIndex = STEPS.findIndex((step) => step.path === location.pathname)
 
   return (
-    <nav className="border-b border-slate-200 bg-slate-100/60 dark:border-slate-800 dark:bg-slate-900/40">
+    <nav className="border-b border-slate-200 bg-app-bg dark:border-slate-800 dark:bg-app-bg-dark">
       <div className="flex w-full items-center gap-1.5 overflow-x-auto px-4 py-3 sm:px-8">
         {STEPS.map((step, i) => {
           const isActive = i === currentIndex
@@ -26,16 +26,16 @@ export function StepIndicator() {
                 to={step.path}
                 className={`flex items-center gap-1.5 whitespace-nowrap rounded-full border px-2.5 py-1 text-xs font-medium transition-colors ${
                   isActive
-                    ? 'border-blue-600 bg-blue-600/10 text-blue-700 dark:text-blue-300'
+                    ? 'border-brand-primary bg-brand-primary/10 text-brand-primary'
                     : isDone
-                      ? 'border-slate-300 bg-slate-200/60 text-slate-600 hover:border-blue-600/40 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-300'
+                      ? 'border-slate-300 bg-slate-200/60 text-slate-600 hover:border-brand-primary/40 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-300'
                       : 'border-transparent text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300'
                 }`}
               >
                 <span
                   className={`flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full text-[10px] ${
                     isActive
-                      ? 'bg-blue-600 text-white'
+                      ? 'bg-brand-primary text-white'
                       : isDone
                         ? 'bg-slate-400 text-slate-900 dark:bg-slate-600 dark:text-slate-200'
                         : 'bg-slate-200 text-slate-500 dark:bg-slate-800 dark:text-slate-500'

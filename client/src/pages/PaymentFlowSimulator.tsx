@@ -211,7 +211,7 @@ export function PaymentFlowSimulator() {
         <button
           type="button"
           onClick={handleNewSimulation}
-          className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
+          className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-muted transition-colors hover:bg-slate-100 dark:border-slate-700 dark:hover:bg-slate-800"
         >
           New Simulation
         </button>
@@ -219,11 +219,11 @@ export function PaymentFlowSimulator() {
     >
       <main className="mx-auto max-w-5xl px-6 py-10">
         <h1 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">Payment Flow Simulator</h1>
-        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+        <p className="mt-1 text-sm text-muted">
           Walk a payment through the full rail — customer, merchant, PSP, network, and issuing bank.
         </p>
 
-        <section className="mt-8 rounded-2xl border border-slate-200 bg-white/60 p-6 shadow-lg shadow-black/5 dark:border-slate-800 dark:bg-slate-900/60 dark:shadow-black/20">
+        <section className="mt-8 rounded-2xl border border-slate-200 bg-surface/60 p-6 shadow-lg shadow-black/5 dark:border-slate-800 dark:bg-surface-dark/60 dark:shadow-black/20">
           <FlowDiagram activeStep={activeStep} complete={!isSubmitting && isCleanSuccess} />
         </section>
 
@@ -244,64 +244,64 @@ export function PaymentFlowSimulator() {
         </section>
 
         {error && (
-          <p className="mt-4 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700 dark:border-rose-900 dark:bg-rose-950/50 dark:text-rose-300">
+          <p className="mt-4 rounded-lg border border-status-failed/30 bg-status-failed/10 px-4 py-3 text-sm text-status-failed dark:border-status-failed/40">
             {error}
           </p>
         )}
 
         {transaction && !isSubmitting && isCleanSuccess && (
-          <section className="mt-6 rounded-2xl border border-l-4 border-slate-200 border-l-emerald-600 bg-slate-50 p-6 shadow-lg shadow-black/5 dark:border-slate-800 dark:border-l-emerald-500 dark:bg-slate-800/40 dark:shadow-black/20">
+          <section className="mt-6 rounded-2xl border border-l-4 border-slate-200 border-l-status-success bg-slate-50 p-6 shadow-lg shadow-black/5 dark:border-slate-800 dark:bg-slate-800/40 dark:shadow-black/20">
             <div className="flex items-center gap-3">
-              <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-emerald-600/15 text-emerald-700 dark:text-emerald-400">
+              <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-status-success/15 text-status-success">
                 <CheckIcon />
               </span>
               <div>
-                <h2 className="font-semibold text-emerald-700 dark:text-emerald-300">Payment Successful</h2>
-                <p className="text-sm text-slate-500 dark:text-slate-400">
+                <h2 className="text-lg font-semibold text-status-success">Payment Successful</h2>
+                <p className="text-sm text-muted">
                   The transaction completed end-to-end with no issues.
                 </p>
               </div>
             </div>
             <dl className="mt-4 grid grid-cols-2 gap-y-2 text-sm sm:grid-cols-4">
-              <dt className="text-slate-500">Reference</dt>
+              <dt className="text-muted">Reference</dt>
               <dd className="col-span-1 truncate font-mono text-slate-700 dark:text-slate-200 sm:col-span-3">
                 {toReferenceNumber(transaction.idempotencyKey)}
               </dd>
-              <dt className="text-slate-500">Amount</dt>
+              <dt className="text-muted">Amount</dt>
               <dd className="text-slate-700 dark:text-slate-200">₹{transaction.amount}</dd>
-              <dt className="text-slate-500">Method</dt>
+              <dt className="text-muted">Method</dt>
               <dd className="text-slate-700 dark:text-slate-200">{transaction.paymentMethod}</dd>
             </dl>
           </section>
         )}
 
         {transaction && !isSubmitting && isAmbiguous && (
-          <section className="mt-6 rounded-2xl border border-l-4 border-slate-200 border-l-amber-600 bg-slate-50 p-6 shadow-lg shadow-black/5 dark:border-slate-800 dark:border-l-amber-500 dark:bg-slate-800/40 dark:shadow-black/20">
+          <section className="mt-6 rounded-2xl border border-l-4 border-slate-200 border-l-status-warning bg-slate-50 p-6 shadow-lg shadow-black/5 dark:border-slate-800 dark:bg-slate-800/40 dark:shadow-black/20">
             <div className="flex items-center gap-3">
-              <span className="flex h-10 w-10 flex-shrink-0 animate-pulse items-center justify-center rounded-full bg-amber-600/15 text-amber-700 dark:text-amber-400">
+              <span className="flex h-10 w-10 flex-shrink-0 animate-pulse items-center justify-center rounded-full bg-status-warning/15 text-status-warning">
                 <WarningIcon />
               </span>
               <div>
-                <h2 className="font-semibold text-amber-700 dark:text-amber-300">Response Not Received</h2>
-                <p className="text-sm text-slate-500 dark:text-slate-400">
+                <h2 className="text-lg font-semibold text-status-warning">Response Not Received</h2>
+                <p className="text-sm text-muted">
                   Request Sent to Bank — the confirmation never made it back. Status: UNKNOWN.
                 </p>
               </div>
             </div>
             <dl className="mt-4 grid grid-cols-2 gap-y-2 text-sm sm:grid-cols-4">
-              <dt className="text-slate-500">Reference</dt>
+              <dt className="text-muted">Reference</dt>
               <dd className="col-span-1 truncate font-mono text-slate-700 dark:text-slate-200 sm:col-span-3">
                 {toReferenceNumber(transaction.idempotencyKey)}
               </dd>
-              <dt className="text-slate-500">Amount</dt>
+              <dt className="text-muted">Amount</dt>
               <dd className="text-slate-700 dark:text-slate-200">₹{transaction.amount}</dd>
-              <dt className="text-slate-500">Method</dt>
+              <dt className="text-muted">Method</dt>
               <dd className="text-slate-700 dark:text-slate-200">{transaction.paymentMethod}</dd>
             </dl>
             <button
               type="button"
               onClick={() => navigate('/retry')}
-              className="mt-4 rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-md shadow-black/10 transition-colors hover:bg-slate-700 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
+              className="mt-4 rounded-lg bg-brand-primary px-4 py-2 text-sm font-medium text-white shadow-md shadow-black/10 transition-colors hover:bg-brand-primary-hover"
             >
               Retry Payment
             </button>
@@ -309,14 +309,24 @@ export function PaymentFlowSimulator() {
         )}
 
         {transaction && !isSubmitting && isGenuineFailure && (
-          <section className="mt-6 rounded-2xl border border-l-4 border-slate-200 border-l-rose-600 bg-slate-50 p-6 shadow-lg shadow-black/5 dark:border-slate-800 dark:border-l-rose-500 dark:bg-slate-800/40 dark:shadow-black/20">
+          <section
+            className={`mt-6 rounded-2xl border border-l-4 border-slate-200 bg-slate-50 p-6 shadow-lg shadow-black/5 dark:border-slate-800 dark:bg-slate-800/40 dark:shadow-black/20 ${
+              wasForcedFailure ? 'border-l-status-duplicate' : 'border-l-status-failed'
+            }`}
+          >
             <div className="flex items-center gap-3">
-              <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-rose-600/15 text-rose-700 dark:text-rose-400">
+              <span
+                className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full ${
+                  wasForcedFailure ? 'bg-status-duplicate/15 text-status-duplicate' : 'bg-status-failed/15 text-status-failed'
+                }`}
+              >
                 <XIcon />
               </span>
               <div>
-                <h2 className="font-semibold text-rose-700 dark:text-rose-300">Payment Failed</h2>
-                <p className="text-sm text-slate-500 dark:text-slate-400">
+                <h2 className={`text-lg font-semibold ${wasForcedFailure ? 'text-status-duplicate' : 'text-status-failed'}`}>
+                  Payment Failed
+                </h2>
+                <p className="text-sm text-muted">
                   {wasForcedFailure
                     ? 'Only one payment attempt is allowed per simulation — no charge was made.'
                     : 'The bank declined the transaction — no charge was made.'}
@@ -324,20 +334,20 @@ export function PaymentFlowSimulator() {
               </div>
             </div>
             <dl className="mt-4 grid grid-cols-2 gap-y-2 text-sm sm:grid-cols-4">
-              <dt className="text-slate-500">Reference</dt>
+              <dt className="text-muted">Reference</dt>
               <dd className="col-span-1 truncate font-mono text-slate-700 dark:text-slate-200 sm:col-span-3">
                 {toReferenceNumber(transaction.idempotencyKey)}
               </dd>
-              <dt className="text-slate-500">Amount</dt>
+              <dt className="text-muted">Amount</dt>
               <dd className="text-slate-700 dark:text-slate-200">₹{transaction.amount}</dd>
-              <dt className="text-slate-500">Method</dt>
+              <dt className="text-muted">Method</dt>
               <dd className="text-slate-700 dark:text-slate-200">{transaction.paymentMethod}</dd>
             </dl>
             {wasForcedFailure ? (
               <button
                 type="button"
                 onClick={handleNewSimulation}
-                className="mt-4 rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-md shadow-black/10 transition-colors hover:bg-slate-700 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
+                className="mt-4 rounded-lg bg-brand-primary px-4 py-2 text-sm font-medium text-white shadow-md shadow-black/10 transition-colors hover:bg-brand-primary-hover"
               >
                 Start New Simulation
               </button>
@@ -345,7 +355,7 @@ export function PaymentFlowSimulator() {
               <button
                 type="button"
                 onClick={() => navigate('/retry')}
-                className="mt-4 rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-md shadow-black/10 transition-colors hover:bg-slate-700 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
+                className="mt-4 rounded-lg bg-brand-primary px-4 py-2 text-sm font-medium text-white shadow-md shadow-black/10 transition-colors hover:bg-brand-primary-hover"
               >
                 Retry Payment
               </button>

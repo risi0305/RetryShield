@@ -12,7 +12,7 @@ function ShieldIcon() {
       strokeWidth={2}
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="h-6 w-6"
+      className="h-7 w-7"
     >
       <path d="M12 3l7 3v5c0 4.5-3 8.5-7 10-4-1.5-7-5.5-7-10V6l7-3z" />
       <path d="M9.5 12l1.8 1.8L14.5 10" />
@@ -56,14 +56,14 @@ export function AccessGate({ children }: { children: ReactNode }) {
   if (isUnlocked) return <>{children}</>
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 dark:bg-slate-950">
-      <div className="w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-8 shadow-lg shadow-black/5 dark:border-slate-800 dark:bg-slate-900 dark:shadow-black/20">
+    <div className="flex min-h-screen items-center justify-center bg-app-bg px-4 dark:bg-app-bg-dark">
+      <div className="w-full max-w-sm rounded-2xl border border-slate-200 bg-surface p-8 shadow-lg shadow-black/5 dark:border-slate-800 dark:bg-surface-dark dark:shadow-black/20">
         <div className="flex flex-col items-center text-center">
-          <span className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-600/10 text-blue-600 dark:text-blue-400">
+          <span className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-primary/10 text-brand-primary">
             <ShieldIcon />
           </span>
           <h1 className="mt-4 text-lg font-semibold text-slate-900 dark:text-slate-100">RetryShield</h1>
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Enter the access code to continue.</p>
+          <p className="mt-1 text-sm text-muted">Enter the access code to continue.</p>
         </div>
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-3">
@@ -74,11 +74,11 @@ export function AccessGate({ children }: { children: ReactNode }) {
             placeholder="Access code"
             autoFocus
             disabled={isVerifying}
-            className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none transition-colors focus:border-blue-600 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+            className="w-full rounded-lg border border-slate-300 bg-surface px-3 py-2 text-slate-900 outline-none transition-colors focus:border-brand-primary disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
           />
 
           {error && (
-            <p className="rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700 dark:border-rose-900 dark:bg-rose-950/50 dark:text-rose-300">
+            <p className="rounded-lg border border-status-failed/30 bg-status-failed/5 px-3 py-2 text-sm text-status-failed dark:bg-status-failed/10">
               {error}
             </p>
           )}
@@ -86,7 +86,7 @@ export function AccessGate({ children }: { children: ReactNode }) {
           <button
             type="submit"
             disabled={isVerifying || !code.trim()}
-            className="w-full rounded-lg bg-slate-900 px-4 py-2.5 font-medium text-white shadow-md shadow-black/10 transition-colors hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
+            className="w-full rounded-lg bg-brand-primary px-4 py-2.5 font-medium text-white shadow-md shadow-black/10 transition-colors hover:bg-brand-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
           >
             {isVerifying ? 'Verifying…' : 'Enter'}
           </button>

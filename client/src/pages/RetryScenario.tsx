@@ -63,23 +63,23 @@ function XIcon() {
 
 const RESOLVED_STYLES: Record<string, { ring: string; badge: string }> = {
   success: {
-    ring: 'border-emerald-600/30 bg-emerald-600/10 text-emerald-700 dark:text-emerald-400',
-    badge: 'text-emerald-700 dark:text-emerald-400',
+    ring: 'border-status-success/30 bg-status-success/10 text-status-success',
+    badge: 'text-status-success',
   },
   duplicate_ignored: {
-    ring: 'border-amber-600/30 bg-amber-600/10 text-amber-700 dark:text-amber-400',
-    badge: 'text-amber-700 dark:text-amber-400',
+    ring: 'border-status-duplicate/30 bg-status-duplicate/10 text-status-duplicate',
+    badge: 'text-status-duplicate',
   },
   failed: {
-    ring: 'border-rose-600/30 bg-rose-600/10 text-rose-700 dark:text-rose-400',
-    badge: 'text-rose-700 dark:text-rose-400',
+    ring: 'border-status-failed/30 bg-status-failed/10 text-status-failed',
+    badge: 'text-status-failed',
   },
 }
 
 const ATTEMPT_STATUS_COLOR: Record<string, string> = {
-  success: 'text-emerald-700 dark:text-emerald-400',
-  duplicate_ignored: 'text-amber-700 dark:text-amber-400',
-  failed: 'text-rose-700 dark:text-rose-400',
+  success: 'text-status-success',
+  duplicate_ignored: 'text-status-duplicate',
+  failed: 'text-status-failed',
 }
 
 function formatStatus(status: string) {
@@ -216,36 +216,36 @@ export function RetryScenario() {
     <PageLayout headerRight={<StatusBadge label="Simulation in Progress" color="blue" />}>
       <main className="mx-auto max-w-5xl px-6 py-10">
         <h1 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">Retry Scenario</h1>
-        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+        <p className="mt-1 text-sm text-muted">
           The bank never confirmed the payment — decide how to resolve it.
         </p>
 
         {!transaction ? (
-          <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-lg shadow-black/5 dark:border-slate-800 dark:bg-slate-900 dark:shadow-black/20">
-            <p className="text-slate-600 dark:text-slate-300">Start a payment first to run a retry scenario.</p>
+          <section className="mt-8 rounded-2xl border border-slate-200 bg-surface p-6 text-center shadow-lg shadow-black/5 dark:border-slate-800 dark:bg-surface-dark dark:shadow-black/20">
+            <p className="text-muted">Start a payment first to run a retry scenario.</p>
             <button
               type="button"
               onClick={() => navigate('/payment-flow')}
-              className="mt-4 rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-md shadow-black/10 transition-colors hover:bg-slate-700 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
+              className="mt-4 rounded-lg bg-brand-primary px-4 py-2 text-sm font-medium text-white shadow-md shadow-black/10 transition-colors hover:bg-brand-primary-hover"
             >
               Go to Payment Flow Simulator
             </button>
           </section>
         ) : (
           <>
-            <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-lg shadow-black/5 dark:border-slate-800 dark:bg-slate-900 dark:shadow-black/20">
+            <section className="mt-8 rounded-2xl border border-slate-200 bg-surface p-6 shadow-lg shadow-black/5 dark:border-slate-800 dark:bg-surface-dark dark:shadow-black/20">
               <div className="flex items-start gap-4">
                 <div
                   className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full border transition-colors ${
                     isResolved
                       ? (resolvedStyle?.ring ?? 'border-slate-300 bg-slate-100 text-slate-500')
-                      : 'animate-pulse border-amber-600/30 bg-amber-600/10 text-amber-700 dark:text-amber-400'
+                      : 'animate-pulse border-status-warning/30 bg-status-warning/10 text-status-warning'
                   }`}
                 >
                   {isResolved ? (liveStatus === 'failed' ? <XIcon /> : <CheckIcon />) : <WarningIcon />}
                 </div>
                 <div className="flex-1">
-                  <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+                  <h2 className="text-sm font-semibold uppercase tracking-wide text-muted">
                     Payment Status
                   </h2>
                   <p className="mt-2 text-slate-700 dark:text-slate-200">Request Sent to Bank</p>
@@ -255,22 +255,22 @@ export function RetryScenario() {
                   <p
                     className={`mt-2 font-semibold ${
                       isResolved
-                        ? (resolvedStyle?.badge ?? 'text-slate-600 dark:text-slate-300')
-                        : 'text-amber-700 dark:text-amber-400'
+                        ? (resolvedStyle?.badge ?? 'text-muted')
+                        : 'text-status-warning'
                     }`}
                   >
                     Status: {isResolved ? formatStatus(liveStatus!).toUpperCase() : 'UNKNOWN'}
                   </p>
                   {!isResolved && (
                     <p className="mt-2 flex items-center gap-1.5 text-xs text-slate-400 dark:text-slate-500">
-                      <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-amber-600" />
+                      <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-status-warning" />
                       Checking with the bank every 2 seconds…
                     </p>
                   )}
 
                   {attemptsUsed > 0 && (
                     <>
-                      <p className="mt-3 text-xs font-medium text-slate-500 dark:text-slate-400">
+                      <p className="mt-3 text-xs font-medium text-muted">
                         Retry Attempt {attemptsUsed} of {MAX_ATTEMPTS}
                       </p>
                       <ul className="mt-1.5 space-y-1 text-xs">
@@ -279,7 +279,7 @@ export function RetryScenario() {
                             <span className="text-slate-400 dark:text-slate-500">Attempt {attempt.attemptNumber}:</span>
                             <span
                               className={`font-medium ${
-                                ATTEMPT_STATUS_COLOR[attempt.status] ?? 'text-slate-600 dark:text-slate-300'
+                                ATTEMPT_STATUS_COLOR[attempt.status] ?? 'text-muted'
                               }`}
                             >
                               {formatStatus(attempt.status)}
@@ -291,7 +291,7 @@ export function RetryScenario() {
                   )}
 
                   {attemptsExhausted && (
-                    <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">
+                    <p className="mt-3 text-xs text-muted">
                       Maximum retry attempts reached — idempotency protection held across all {MAX_ATTEMPTS} tries.
                     </p>
                   )}
@@ -306,7 +306,7 @@ export function RetryScenario() {
               type="button"
               onClick={handleRetryPayment}
               disabled={isSubmitting || attemptsExhausted || isAutoAdvancing}
-              className="mt-6 w-full rounded-lg bg-slate-900 px-4 py-2.5 font-medium text-white shadow-md shadow-black/10 transition-colors hover:bg-slate-700 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white disabled:cursor-not-allowed disabled:opacity-50"
+              className="mt-6 w-full rounded-lg bg-brand-primary px-4 py-2.5 font-medium text-white shadow-md shadow-black/10 transition-colors hover:bg-brand-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isSubmitting ? 'Retrying…' : attemptsExhausted ? 'Max Retries Reached' : 'Retry Payment'}
             </button>
@@ -316,7 +316,7 @@ export function RetryScenario() {
                 type="button"
                 onClick={() => navigate('/ledger-comparison')}
                 disabled={isAutoAdvancing}
-                className="mt-3 w-full rounded-lg border border-blue-600 px-4 py-2.5 font-medium text-blue-700 transition-colors hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50 dark:text-blue-400 dark:hover:bg-blue-950/30"
+                className="mt-3 w-full rounded-lg border border-brand-primary px-4 py-2.5 font-medium text-brand-primary transition-colors hover:bg-brand-primary/10 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-brand-primary/20"
               >
                 Continue to Ledger Comparison
               </button>
@@ -326,7 +326,7 @@ export function RetryScenario() {
               type="button"
               onClick={handleCancelSimulation}
               disabled={isAutoAdvancing}
-              className="mt-3 w-full rounded-lg border border-slate-300 px-4 py-2.5 font-medium text-slate-600 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+              className="mt-3 w-full rounded-lg border border-slate-300 px-4 py-2.5 font-medium text-muted transition-colors hover:bg-slate-100 dark:border-slate-700 dark:hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
             >
               Cancel Simulation
             </button>
@@ -334,7 +334,7 @@ export function RetryScenario() {
         )}
 
         {error && (
-          <p className="mt-4 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700 dark:border-rose-900 dark:bg-rose-950/50 dark:text-rose-300">
+          <p className="mt-4 rounded-lg border border-status-failed/30 bg-status-failed/10 px-4 py-3 text-sm text-status-failed">
             {error}
           </p>
         )}

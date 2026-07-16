@@ -18,8 +18,8 @@ function ArrowIcon({ lit, complete }: { lit: boolean; complete: boolean }) {
       className={`h-5 w-5 flex-shrink-0 transition-colors duration-300 ${
         lit
           ? complete
-            ? 'text-emerald-700 dark:text-emerald-400'
-            : 'text-blue-700 dark:text-blue-400'
+            ? 'text-status-success'
+            : 'text-brand-primary'
           : 'text-slate-300 dark:text-slate-700'
       }`}
     >
@@ -47,15 +47,15 @@ export function FlowDiagram({ activeStep, complete = false }: FlowDiagramProps) 
             <div
               className={`flex min-w-[110px] flex-col items-center gap-2 rounded-xl border px-4 py-3 text-center text-xs font-medium transition-all duration-300 ${
                 isSuccess
-                  ? 'border-emerald-600 bg-emerald-600/10 text-emerald-700 shadow-[0_0_0_3px_rgba(5,150,105,0.12)] dark:text-emerald-300'
+                  ? 'border-status-success bg-status-success/10 text-status-success shadow-[0_0_0_3px_rgba(16,185,129,0.12)]'
                   : isLit
-                    ? 'border-blue-600 bg-blue-600/10 text-blue-700 shadow-[0_0_0_3px_rgba(37,99,235,0.12)] dark:text-blue-300'
-                    : 'border-slate-300 bg-slate-100 text-slate-500 dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-400'
+                    ? 'border-brand-primary bg-brand-primary/10 text-brand-primary shadow-[0_0_0_3px_rgba(79,70,229,0.12)]'
+                    : 'border-slate-300 bg-slate-100 text-muted dark:border-slate-700 dark:bg-slate-800/50'
               }`}
             >
               <span
                 className={`h-2.5 w-2.5 rounded-full transition-colors duration-300 ${
-                  isSuccess ? 'bg-emerald-600' : isLit ? 'animate-pulse bg-blue-600' : 'bg-slate-400 dark:bg-slate-600'
+                  isSuccess ? 'bg-status-success' : isLit ? 'animate-pulse bg-brand-primary' : 'bg-slate-400 dark:bg-slate-600'
                 }`}
               />
               {step}

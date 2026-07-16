@@ -24,7 +24,7 @@ function Spinner() {
 function AiReportSkeleton() {
   return (
     <>
-      <div className="mt-4 space-y-2 rounded-xl border border-l-4 border-slate-200 border-l-violet-600 bg-slate-50 p-4 dark:border-slate-800 dark:border-l-violet-500 dark:bg-slate-800/40">
+      <div className="mt-4 space-y-2 rounded-xl border border-l-4 border-slate-200 border-l-status-duplicate bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-800/40">
         <Skeleton className="h-3 w-full" />
         <Skeleton className="h-3 w-full" />
         <Skeleton className="h-3 w-2/3" />
@@ -79,7 +79,7 @@ export function AiRootCauseAnalysis() {
             type="button"
             onClick={handleGenerateReport}
             disabled={isLoading}
-            className="inline-flex items-center gap-2 rounded-lg bg-violet-700 px-4 py-2 text-sm font-medium text-white shadow-md shadow-black/10 transition-colors hover:bg-violet-600 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex items-center gap-2 rounded-lg bg-status-duplicate px-4 py-2 text-sm font-medium text-white shadow-md shadow-black/10 transition-colors hover:bg-status-duplicate/90 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {isLoading && <Spinner />}
             {isLoading ? 'Generating…' : 'Generate AI Report'}
@@ -89,29 +89,29 @@ export function AiRootCauseAnalysis() {
     >
       <main className="mx-auto max-w-5xl px-6 py-10">
         <h1 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">AI Root Cause Analysis</h1>
-        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+        <p className="mt-1 text-sm text-muted">
           Let AI read this transaction's incident timeline and summarize what happened.
         </p>
 
         {!transaction ? (
-          <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-lg shadow-black/5 dark:border-slate-800 dark:bg-slate-900 dark:shadow-black/20">
-            <p className="text-slate-600 dark:text-slate-300">Start a payment first to generate a root cause report.</p>
+          <section className="mt-8 rounded-2xl border border-slate-200 bg-surface p-6 text-center shadow-lg shadow-black/5 dark:border-slate-800 dark:bg-surface-dark dark:shadow-black/20">
+            <p className="text-muted">Start a payment first to generate a root cause report.</p>
             <button
               type="button"
               onClick={() => navigate('/payment-flow')}
-              className="mt-4 rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-md shadow-black/10 transition-colors hover:bg-slate-700 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
+              className="mt-4 rounded-lg bg-brand-primary px-4 py-2 text-sm font-medium text-white shadow-md shadow-black/10 transition-colors hover:bg-brand-primary-hover"
             >
               Go to Payment Flow Simulator
             </button>
           </section>
         ) : (
-          <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-lg shadow-black/5 dark:border-slate-800 dark:bg-slate-900 dark:shadow-black/20">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+          <section className="mt-8 rounded-2xl border border-slate-200 bg-surface p-6 shadow-lg shadow-black/5 dark:border-slate-800 dark:bg-surface-dark dark:shadow-black/20">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-muted">
               AI Root Cause Summary
             </h2>
 
             {error && (
-              <p className="mt-4 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700 dark:border-rose-900 dark:bg-rose-950/50 dark:text-rose-300">
+              <p className="mt-4 rounded-lg border border-status-failed/30 bg-status-failed/10 px-4 py-3 text-sm text-status-failed dark:border-status-failed/40">
                 {error}
               </p>
             )}
@@ -120,11 +120,11 @@ export function AiRootCauseAnalysis() {
               <AiReportSkeleton />
             ) : aiReport ? (
               <>
-                <div className="mt-4 rounded-xl border border-l-4 border-slate-200 border-l-violet-600 bg-slate-50 p-4 text-sm leading-relaxed text-slate-700 dark:border-slate-800 dark:border-l-violet-500 dark:bg-slate-800/40 dark:text-slate-200">
+                <div className="mt-4 rounded-xl border border-l-4 border-slate-200 border-l-status-duplicate bg-slate-50 p-4 text-sm leading-relaxed text-slate-700 dark:border-slate-800 dark:bg-slate-800/40 dark:text-slate-200">
                   {aiReport.summary}
                 </div>
 
-                <h3 className="mt-6 text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+                <h3 className="mt-6 text-sm font-semibold uppercase tracking-wide text-muted">
                   Key Factors
                 </h3>
                 <ul className="mt-3 list-disc space-y-1.5 pl-5 text-sm text-slate-700 dark:text-slate-200">
@@ -134,7 +134,7 @@ export function AiRootCauseAnalysis() {
                 </ul>
               </>
             ) : !error ? (
-              <p className="mt-4 text-sm text-slate-500">Click "Generate AI Report" to analyze this incident.</p>
+              <p className="mt-4 text-sm text-muted">Click "Generate AI Report" to analyze this incident.</p>
             ) : null}
           </section>
         )}

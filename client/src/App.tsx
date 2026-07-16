@@ -1,4 +1,5 @@
 import { Route, Routes } from 'react-router-dom'
+import { PageTransition } from './components/PageTransition'
 import { ToastContainer } from './components/ToastContainer'
 import { TransactionProvider } from './context/TransactionContext'
 import { AiRootCauseAnalysis } from './pages/AiRootCauseAnalysis'
@@ -16,18 +17,20 @@ function App() {
   return (
     <TransactionProvider>
       <ToastContainer />
-      <Routes>
-        <Route path="/" element={<Menu />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/history" element={<History />} />
-        <Route path="/scenario-comparison" element={<ScenarioComparison />} />
-        <Route path="/payment-flow" element={<PaymentFlowSimulator />} />
-        <Route path="/failure-injection" element={<NetworkFailureInjection />} />
-        <Route path="/retry" element={<RetryScenario />} />
-        <Route path="/incident-timeline" element={<IncidentTimeline />} />
-        <Route path="/ledger-comparison" element={<LedgerComparison />} />
-        <Route path="/ai-analysis" element={<AiRootCauseAnalysis />} />
-      </Routes>
+      <PageTransition>
+        <Routes>
+          <Route path="/" element={<Menu />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/history" element={<History />} />
+          <Route path="/scenario-comparison" element={<ScenarioComparison />} />
+          <Route path="/payment-flow" element={<PaymentFlowSimulator />} />
+          <Route path="/failure-injection" element={<NetworkFailureInjection />} />
+          <Route path="/retry" element={<RetryScenario />} />
+          <Route path="/incident-timeline" element={<IncidentTimeline />} />
+          <Route path="/ledger-comparison" element={<LedgerComparison />} />
+          <Route path="/ai-analysis" element={<AiRootCauseAnalysis />} />
+        </Routes>
+      </PageTransition>
     </TransactionProvider>
   )
 }

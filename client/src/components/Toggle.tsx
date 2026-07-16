@@ -8,7 +8,7 @@ interface ToggleProps {
 export function Toggle({ label, checked, onChange, disabled }: ToggleProps) {
   return (
     <div className={`flex items-center justify-between gap-4 ${disabled ? 'opacity-50' : ''}`}>
-      <span className="text-sm text-slate-600 dark:text-slate-300">{label}</span>
+      <span className="text-sm text-muted">{label}</span>
       <button
         type="button"
         role="switch"
@@ -16,7 +16,7 @@ export function Toggle({ label, checked, onChange, disabled }: ToggleProps) {
         disabled={disabled}
         onClick={() => onChange(!checked)}
         className={`relative h-6 w-11 flex-shrink-0 rounded-full transition-colors disabled:cursor-not-allowed ${
-          checked ? 'bg-blue-700' : 'bg-slate-300 dark:bg-slate-700'
+          checked ? 'bg-brand-primary' : 'bg-slate-300 dark:bg-slate-700'
         }`}
       >
         <span

@@ -115,13 +115,11 @@ export function TransactionForm({
   }, [])
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-lg shadow-black/5 dark:border-slate-800 dark:bg-slate-900 dark:shadow-black/20">
-      <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
-        Transaction Details
-      </h2>
+    <div className="rounded-2xl border border-slate-200 bg-surface p-6 shadow-lg shadow-black/5 dark:border-slate-800 dark:bg-surface-dark dark:shadow-black/20">
+      <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-muted">Transaction Details</h2>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <label className="flex flex-col gap-1.5 text-sm text-slate-600 dark:text-slate-300">
+        <label className="flex flex-col gap-1.5 text-sm text-muted">
           Amount (₹)
           <input
             type="number"
@@ -131,17 +129,17 @@ export function TransactionForm({
             onChange={(e) => onAmountChange(e.target.value)}
             disabled={isSubmitting}
             placeholder="e.g. 500"
-            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none transition-colors focus:border-blue-600 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+            className="rounded-lg border border-slate-300 bg-surface px-3 py-2 text-slate-900 outline-none transition-colors focus:border-brand-primary disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
           />
         </label>
 
-        <label className="flex flex-col gap-1.5 text-sm text-slate-600 dark:text-slate-300">
+        <label className="flex flex-col gap-1.5 text-sm text-muted">
           Payment Method
           <select
             value={paymentMethod}
             onChange={(e) => onPaymentMethodChange(e.target.value as PaymentMethod)}
             disabled={isSubmitting}
-            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none transition-colors focus:border-blue-600 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+            className="rounded-lg border border-slate-300 bg-surface px-3 py-2 text-slate-900 outline-none transition-colors focus:border-brand-primary disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
           >
             <option value="UPI">UPI</option>
             <option value="Card">Card</option>
@@ -153,7 +151,7 @@ export function TransactionForm({
 
       {isCardStep && (
         <div className="mt-4 space-y-4 rounded-lg border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-800/40">
-          <label className="flex flex-col gap-1.5 text-sm text-slate-600 dark:text-slate-300">
+          <label className="flex flex-col gap-1.5 text-sm text-muted">
             Card Number
             <input
               type="text"
@@ -164,12 +162,12 @@ export function TransactionForm({
               disabled={isSubmitting}
               placeholder="4242 4242 4242 4242"
               maxLength={19}
-              className="rounded-lg border border-slate-300 bg-white px-3 py-2 font-mono text-slate-900 outline-none transition-colors focus:border-blue-600 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+              className="rounded-lg border border-slate-300 bg-surface px-3 py-2 font-mono text-slate-900 outline-none transition-colors focus:border-brand-primary disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
             />
           </label>
 
           <div className="grid gap-4 sm:grid-cols-2">
-            <label className="flex flex-col gap-1.5 text-sm text-slate-600 dark:text-slate-300">
+            <label className="flex flex-col gap-1.5 text-sm text-muted">
               Expiry (MM/YY)
               <input
                 type="text"
@@ -180,11 +178,11 @@ export function TransactionForm({
                 disabled={isSubmitting}
                 placeholder="MM/YY"
                 maxLength={5}
-                className="rounded-lg border border-slate-300 bg-white px-3 py-2 font-mono text-slate-900 outline-none transition-colors focus:border-blue-600 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+                className="rounded-lg border border-slate-300 bg-surface px-3 py-2 font-mono text-slate-900 outline-none transition-colors focus:border-brand-primary disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
               />
             </label>
 
-            <label className="flex flex-col gap-1.5 text-sm text-slate-600 dark:text-slate-300">
+            <label className="flex flex-col gap-1.5 text-sm text-muted">
               CVV
               <input
                 type="password"
@@ -195,7 +193,7 @@ export function TransactionForm({
                 disabled={isSubmitting}
                 placeholder="123"
                 maxLength={4}
-                className="rounded-lg border border-slate-300 bg-white px-3 py-2 font-mono text-slate-900 outline-none transition-colors focus:border-blue-600 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+                className="rounded-lg border border-slate-300 bg-surface px-3 py-2 font-mono text-slate-900 outline-none transition-colors focus:border-brand-primary disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
               />
             </label>
           </div>
@@ -204,13 +202,13 @@ export function TransactionForm({
 
       {isNetBankingStep && (
         <div className="mt-4 rounded-lg border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-800/40">
-          <label className="flex flex-col gap-1.5 text-sm text-slate-600 dark:text-slate-300">
+          <label className="flex flex-col gap-1.5 text-sm text-muted">
             Select Bank
             <select
               value={selectedBank}
               onChange={(e) => setSelectedBank(e.target.value)}
               disabled={isSubmitting}
-              className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none transition-colors focus:border-blue-600 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+              className="rounded-lg border border-slate-300 bg-surface px-3 py-2 text-slate-900 outline-none transition-colors focus:border-brand-primary disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
             >
               <option value="">— Choose your bank —</option>
               {NET_BANKING_BANKS.map((bank) => (
@@ -232,8 +230,8 @@ export function TransactionForm({
             aria-label="Simulate scanning this QR code"
             className={`flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-lg border transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
               isScanning
-                ? 'border-blue-600 bg-blue-600/10 text-blue-600 dark:text-blue-400'
-                : 'border-slate-300 bg-white text-slate-700 hover:border-blue-400 hover:bg-blue-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:border-blue-600/50 dark:hover:bg-slate-800'
+                ? 'border-brand-primary bg-brand-primary/10 text-brand-primary'
+                : 'border-slate-300 bg-surface text-slate-700 hover:border-brand-primary/50 hover:bg-brand-primary/5 dark:border-slate-700 dark:bg-surface-dark dark:text-slate-200 dark:hover:border-brand-primary/50 dark:hover:bg-slate-800'
             }`}
           >
             {isScanning ? (
@@ -242,11 +240,11 @@ export function TransactionForm({
               <QrCode size={32} strokeWidth={1.5} />
             )}
           </button>
-          <div className="text-sm text-slate-600 dark:text-slate-300">
+          <div className="text-sm text-muted">
             <p className="font-medium text-slate-900 dark:text-slate-100">
               {isScanning ? 'Scanning…' : Number(amount) > 0 ? `Scan to pay ₹${amount}` : 'Scan to pay'}
             </p>
-            <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
+            <p className="mt-0.5 text-xs text-muted">
               {isScanning
                 ? 'Payment starts automatically once the scan completes.'
                 : 'Tap the code to simulate a customer scanning it with their UPI app.'}
@@ -256,10 +254,8 @@ export function TransactionForm({
       )}
 
       <div className="mt-6 border-t border-slate-200 pt-4 dark:border-slate-800">
-        <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
-          Quick Demo Presets
-        </h3>
-        <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">
+        <h3 className="text-xs font-semibold uppercase tracking-wide text-muted">Quick Demo Presets</h3>
+        <p className="mt-1 text-xs text-muted">
           Fills in the scenario below and starts the payment automatically.
         </p>
         <div className="mt-3 grid gap-2 sm:grid-cols-3">
@@ -277,12 +273,12 @@ export function TransactionForm({
                 disabled={isSubmitting}
                 className={`rounded-lg border px-3 py-2.5 text-left text-xs transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
                   isActive
-                    ? 'border-blue-600 bg-blue-600/10 text-blue-700 dark:text-blue-300'
-                    : 'border-slate-300 bg-slate-50 text-slate-600 hover:border-blue-400 hover:bg-blue-50 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-300 dark:hover:border-blue-600/50 dark:hover:bg-slate-800'
+                    ? 'border-brand-primary bg-brand-primary/10 text-brand-primary'
+                    : 'border-slate-300 bg-slate-50 text-slate-600 hover:border-brand-primary/40 hover:bg-brand-primary/5 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-300 dark:hover:border-brand-primary/50 dark:hover:bg-slate-800'
                 }`}
               >
                 <span className="block font-semibold">{preset.label}</span>
-                <span className="mt-1 block text-slate-500 dark:text-slate-400">{preset.description}</span>
+                <span className="mt-1 block text-muted">{preset.description}</span>
               </button>
             )
           })}
@@ -297,18 +293,18 @@ export function TransactionForm({
           />
 
           {simulateFailure && (
-            <label className="mt-3 flex flex-col gap-1.5 text-sm text-slate-600 dark:text-slate-300">
+            <label className="mt-3 flex flex-col gap-1.5 text-sm text-muted">
               Failure Mode
               <select
                 value={failureMode}
                 onChange={(e) => onFailureModeChange(e.target.value as SimulatedScenario)}
                 disabled={isSubmitting}
-                className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none transition-colors focus:border-blue-600 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+                className="rounded-lg border border-slate-300 bg-surface px-3 py-2 text-slate-900 outline-none transition-colors focus:border-brand-primary disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
               >
                 <option value="response_lost">Response Lost After Success</option>
                 <option value="genuine_failure">Payment Genuinely Failed</option>
               </select>
-              <span className="text-xs text-slate-500 dark:text-slate-400">
+              <span className="text-xs text-muted">
                 {failureMode === 'response_lost'
                   ? 'The payment actually succeeds on the backend, but the confirmation never reaches the customer.'
                   : 'The payment is actually declined by the bank — a retry is a legitimate new attempt.'}
@@ -322,7 +318,7 @@ export function TransactionForm({
         type="button"
         onClick={onSubmit}
         disabled={isSubmitting || !amount || Number(amount) <= 0 || !isCardDetailsValid || !isNetBankingValid}
-        className="mt-6 w-full rounded-lg bg-slate-900 px-4 py-2.5 font-medium text-white shadow-md shadow-black/10 transition-colors hover:bg-slate-700 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white disabled:cursor-not-allowed disabled:opacity-50"
+        className="mt-6 w-full rounded-lg bg-brand-primary px-4 py-2.5 font-medium text-white shadow-md shadow-black/10 transition-colors hover:bg-brand-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
       >
         {isSubmitting ? 'Processing…' : 'Start Payment'}
       </button>

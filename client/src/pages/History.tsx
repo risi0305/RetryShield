@@ -32,11 +32,11 @@ interface HistoryTransaction {
 type Outcome = 'success' | 'genuine_retry' | 'duplicate_blocked' | 'failed' | 'pending'
 
 const OUTCOME_CONFIG: Record<Outcome, { label: string; classes: string }> = {
-  success: { label: 'Success', classes: 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400' },
-  genuine_retry: { label: 'Genuine Retry', classes: 'bg-blue-500/10 text-blue-700 dark:text-blue-400' },
-  duplicate_blocked: { label: 'Duplicate Blocked', classes: 'bg-violet-500/10 text-violet-700 dark:text-violet-400' },
-  failed: { label: 'Failed', classes: 'bg-rose-500/10 text-rose-700 dark:text-rose-400' },
-  pending: { label: 'Pending', classes: 'bg-amber-500/10 text-amber-700 dark:text-amber-400' },
+  success: { label: 'Success', classes: 'bg-status-success/10 text-status-success' },
+  genuine_retry: { label: 'Genuine Retry', classes: 'bg-slate-500/10 text-muted' },
+  duplicate_blocked: { label: 'Duplicate Blocked', classes: 'bg-status-duplicate/10 text-status-duplicate' },
+  failed: { label: 'Failed', classes: 'bg-status-failed/10 text-status-failed' },
+  pending: { label: 'Pending', classes: 'bg-status-warning/10 text-status-warning' },
 }
 
 /** The raw `status` field can't tell "first-try success" apart from "succeeded after a genuine failure" — that only shows up in the event log. */
@@ -135,11 +135,11 @@ export function History() {
     <PageLayout showSteps={false}>
       <main className="mx-auto max-w-7xl px-6 py-10">
         <h1 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">History</h1>
-        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+        <p className="mt-1 text-sm text-muted">
           Every simulation you've run, across all sessions.
         </p>
 
-        <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm shadow-black/5 dark:border-slate-800 dark:bg-slate-900 dark:shadow-black/20">
+        <section className="mt-8 rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm shadow-black/5 dark:border-slate-800 dark:bg-surface-dark dark:shadow-black/20">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="relative w-full sm:max-w-xs">
               <Search
@@ -152,14 +152,14 @@ export function History() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search by reference number…"
-                className="w-full rounded-lg border border-slate-300 bg-white py-2 pl-9 pr-3 text-sm text-slate-900 outline-none transition-colors focus:border-blue-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+                className="w-full rounded-lg border border-slate-300 bg-white py-2 pl-9 pr-3 text-sm text-slate-900 outline-none transition-colors focus:border-brand-primary dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
               />
             </div>
 
             <select
               value={outcomeFilter}
               onChange={(e) => setOutcomeFilter(e.target.value as 'all' | Outcome)}
-              className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition-colors focus:border-blue-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+              className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition-colors focus:border-brand-primary dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
             >
               <option value="all">All Outcomes</option>
               {(Object.entries(OUTCOME_CONFIG) as [Outcome, { label: string }][]).map(([key, cfg]) => (
@@ -180,7 +180,7 @@ export function History() {
                 <div className="overflow-x-auto">
                   <table className="min-w-full text-left text-sm">
                     <thead>
-                      <tr className="text-slate-500">
+                      <tr className="text-muted">
                         <th className="whitespace-nowrap pb-2 pr-6 font-medium">Reference</th>
                         <th className="whitespace-nowrap pb-2 pr-6 font-medium">Amount (₹)</th>
                         <th className="whitespace-nowrap pb-2 pr-6 font-medium">Payment Method</th>
@@ -208,7 +208,7 @@ export function History() {
                                 {cfg.label}
                               </span>
                             </td>
-                            <td className="whitespace-nowrap py-2.5 font-mono text-xs text-slate-500 dark:text-slate-400">
+                            <td className="whitespace-nowrap py-2.5 font-mono text-xs text-muted">
                               {formatTimestamp(tx.createdAt)}
                             </td>
                           </tr>
@@ -219,7 +219,7 @@ export function History() {
                 </div>
               ) : (
                 <div className="flex flex-col items-center gap-3 py-10 text-center">
-                  <p className="text-sm text-slate-500 dark:text-slate-400">
+                  <p className="text-sm text-muted">
                     No simulations match your search or filter.
                   </p>
                   <button
@@ -228,7 +228,7 @@ export function History() {
                       setSearchQuery('')
                       setOutcomeFilter('all')
                     }}
-                    className="text-sm font-medium text-blue-700 hover:underline dark:text-blue-400"
+                    className="text-sm font-medium text-brand-primary hover:underline"
                   >
                     Clear filters
                   </button>
